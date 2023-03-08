@@ -1,0 +1,9 @@
+{
+	"name": "adfPracticesanthosh",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "f9a2b6ea-6e38-4448-9aac-da6d4189dcb4",
+		"tenantId": "12f921d8-f30d-4596-a652-7045b338485a"
+	}
+}
