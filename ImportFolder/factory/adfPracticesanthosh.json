@@ -1,5 +1,13 @@
 {
 	"name": "adfPracticesanthosh",
+	"properties": {
+		"globalParameters": {
+			"gP_CreatedBy": {
+				"type": "string",
+				"value": "SanthoshAdfPractice"
+			}
+		}
+	},
 	"location": "eastus",
 	"identity": {
 		"type": "SystemAssigned",
