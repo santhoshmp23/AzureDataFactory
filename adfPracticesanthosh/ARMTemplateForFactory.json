@@ -1,0 +1,148 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfPracticesanthosh"
+		},
+		"ls_RawFile_DL_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_RawFile_DL'"
+		},
+		"ls_RawFile_DL_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://saadfpractivedl.dfs.core.windows.net/"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_RawFile_DL')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "This will connect to raw file folder in datalake",
+				"parameters": {
+					"DataLake_Url": {
+						"type": "string",
+						"defaultValue": "https://saadfpractivedl.dfs.core.windows.net/"
+					}
+				},
+				"annotations": [
+					"DataLake"
+				],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ls_RawFile_DL_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ls_RawFile_DL_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_src_Movie')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_RawFile_DL",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DataLake_Url": {
+							"value": "@dataset().pDatalakeValue",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"pDatalakeValue": {
+						"type": "string",
+						"defaultValue": "https://saadfpractivedl.dfs.core.windows.net/"
+					}
+				},
+				"folder": {
+					"name": "Source_Data"
+				},
+				"annotations": [
+					"Source_Data"
+				],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Movies.csv",
+						"fileSystem": "raw-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "rank",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "year",
+						"type": "String"
+					},
+					{
+						"name": "rating",
+						"type": "String"
+					},
+					{
+						"name": "genre",
+						"type": "String"
+					},
+					{
+						"name": "certificate",
+						"type": "String"
+					},
+					{
+						"name": "run_time",
+						"type": "String"
+					},
+					{
+						"name": "tagline",
+						"type": "String"
+					},
+					{
+						"name": "budget",
+						"type": "String"
+					},
+					{
+						"name": "box_office",
+						"type": "String"
+					},
+					{
+						"name": "casts",
+						"type": "String"
+					},
+					{
+						"name": "directors",
+						"type": "String"
+					},
+					{
+						"name": "writers",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_RawFile_DL')]"
+			]
+		}
+	]
+}
