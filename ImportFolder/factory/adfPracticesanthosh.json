@@ -6,7 +6,7 @@
 				"type": "string",
 				"value": "SanthoshAdfPractice"
 			},
-			"pDatalateName": {
+			"pDatalakeName": {
 				"type": "string",
 				"value": "https://saadfpractivedl.dfs.core.windows.net/"
 			}
