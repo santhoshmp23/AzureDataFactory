@@ -1,0 +1,102 @@
+{
+	"name": "ds_src_matches",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_RawFile_DL",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DataLake_Url": "https://saadfpractivedl.dfs.core.windows.net/"
+			}
+		},
+		"folder": {
+			"name": "Source_Data"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "matches.csv",
+				"fileSystem": "raw-files"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "id",
+				"type": "String"
+			},
+			{
+				"name": "season",
+				"type": "String"
+			},
+			{
+				"name": "city",
+				"type": "String"
+			},
+			{
+				"name": "date",
+				"type": "String"
+			},
+			{
+				"name": "team1",
+				"type": "String"
+			},
+			{
+				"name": "team2",
+				"type": "String"
+			},
+			{
+				"name": "toss_winner",
+				"type": "String"
+			},
+			{
+				"name": "toss_decision",
+				"type": "String"
+			},
+			{
+				"name": "result",
+				"type": "String"
+			},
+			{
+				"name": "dl_applied",
+				"type": "String"
+			},
+			{
+				"name": "winner",
+				"type": "String"
+			},
+			{
+				"name": "win_by_runs",
+				"type": "String"
+			},
+			{
+				"name": "win_by_wickets",
+				"type": "String"
+			},
+			{
+				"name": "player_of_match",
+				"type": "String"
+			},
+			{
+				"name": "venue",
+				"type": "String"
+			},
+			{
+				"name": "umpire1",
+				"type": "String"
+			},
+			{
+				"name": "umpire2",
+				"type": "String"
+			},
+			{
+				"name": "umpire3",
+				"type": "String"
+			}
+		]
+	}
+}
