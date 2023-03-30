@@ -2,5 +2,9 @@
 	"gP_CreatedBy": {
 		"type": "string",
 		"value": "SanthoshAdfPractice"
+	},
+	"pDatalakeName": {
+		"type": "string",
+		"value": "https://saadfpractivedl.dfs.core.windows.net/"
 	}
 }

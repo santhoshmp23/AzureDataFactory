@@ -10,6 +10,12 @@
 		},
 		"ls_RawFile_DL_properties_typeProperties_url": {
 			"value": "https://saadfpractivedl.dfs.core.windows.net/"
+		},
+		"default_properties_gP_CreatedBy_value": {
+			"value": "SanthoshAdfPractice"
+		},
+		"default_properties_pDatalakeName_value": {
+			"value": "https://saadfpractivedl.dfs.core.windows.net/"
 		}
 	}
 }

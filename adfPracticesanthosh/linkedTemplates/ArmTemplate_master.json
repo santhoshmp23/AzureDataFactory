@@ -15,6 +15,14 @@
 			"type": "string",
 			"defaultValue": "https://saadfpractivedl.dfs.core.windows.net/"
 		},
+		"default_properties_gP_CreatedBy_value": {
+			"type": "string",
+			"defaultValue": "SanthoshAdfPractice"
+		},
+		"default_properties_pDatalakeName_value": {
+			"type": "string",
+			"defaultValue": "https://saadfpractivedl.dfs.core.windows.net/"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -44,6 +52,12 @@
 					},
 					"ls_RawFile_DL_accountKey": {
 						"value": "[parameters('ls_RawFile_DL_accountKey')]"
+					},
+					"default_properties_gP_CreatedBy_value": {
+						"value": "[parameters('default_properties_gP_CreatedBy_value')]"
+					},
+					"default_properties_pDatalakeName_value": {
+						"value": "[parameters('default_properties_pDatalakeName_value')]"
 					},
 					"ls_RawFile_DL_properties_typeProperties_url": {
 						"value": "[parameters('ls_RawFile_DL_properties_typeProperties_url')]"
