@@ -5,6 +5,10 @@
 			"gP_CreatedBy": {
 				"type": "string",
 				"value": "SanthoshAdfPractice"
+			},
+			"pDatalateName": {
+				"type": "string",
+				"value": "https://saadfpractivedl.dfs.core.windows.net/"
 			}
 		}
 	},
