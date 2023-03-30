@@ -5,7 +5,16 @@
 			"referenceName": "ls_RawFile_DL",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"DataLake_Url": "https://saadfpractivedl.dfs.core.windows.net/"
+				"DataLake_Url": {
+					"value": "@dataset().pDataLakeName",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"pDataLakeName": {
+				"type": "string",
+				"defaultValue": "https://saadfpractivedl.dfs.core.windows.net/"
 			}
 		},
 		"folder": {
