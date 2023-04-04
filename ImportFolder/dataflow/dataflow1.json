@@ -1,0 +1,44 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_src_matches",
+						"type": "DatasetReference"
+					},
+					"name": "SrcTeamNames1"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          id as integer,",
+				"          season as short,",
+				"          city as string,",
+				"          date as date,",
+				"          team1 as string,",
+				"          team2 as string,",
+				"          toss_winner as string,",
+				"          toss_decision as string,",
+				"          result as string,",
+				"          dl_applied as boolean,",
+				"          winner as string,",
+				"          win_by_runs as short,",
+				"          win_by_wickets as short,",
+				"          player_of_match as string,",
+				"          venue as string,",
+				"          umpire1 as string,",
+				"          umpire2 as string,",
+				"          umpire3 as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> SrcTeamNames1"
+			]
+		}
+	}
+}
