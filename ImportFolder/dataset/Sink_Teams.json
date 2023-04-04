@@ -1,0 +1,31 @@
+{
+	"name": "Sink_Teams",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServerAzure",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Sink_Data"
+		},
+		"annotations": [
+			"DatabaseTables"
+		],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "TeamName",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "tblTeams"
+		}
+	}
+}
