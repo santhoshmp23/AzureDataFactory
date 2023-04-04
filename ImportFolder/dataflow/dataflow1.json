@@ -10,10 +10,24 @@
 						"type": "DatasetReference"
 					},
 					"name": "SrcTeamNames1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_src_matches",
+						"type": "DatasetReference"
+					},
+					"name": "SrcTeamName2"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "SelectOnlyTeam1"
+				},
+				{
+					"name": "SelectOnlyTeam2"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          id as integer,",
@@ -37,7 +51,40 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> SrcTeamNames1"
+				"     ignoreNoFilesFound: false) ~> SrcTeamNames1",
+				"source(output(",
+				"          id as integer,",
+				"          season as short,",
+				"          city as string,",
+				"          date as date,",
+				"          team1 as string,",
+				"          team2 as string,",
+				"          toss_winner as string,",
+				"          toss_decision as string,",
+				"          result as string,",
+				"          dl_applied as boolean,",
+				"          winner as string,",
+				"          win_by_runs as short,",
+				"          win_by_wickets as short,",
+				"          player_of_match as string,",
+				"          venue as string,",
+				"          umpire1 as string,",
+				"          umpire2 as string,",
+				"          umpire3 as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> SrcTeamName2",
+				"SrcTeamNames1 select(mapColumn(",
+				"          team1",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectOnlyTeam1",
+				"SrcTeamName2 select(mapColumn(",
+				"          team2",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectOnlyTeam2"
 			]
 		}
 	}
