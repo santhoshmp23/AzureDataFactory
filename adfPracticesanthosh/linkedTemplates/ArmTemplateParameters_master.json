@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "adfPracticesanthosh"
 		},
+		"SqlServerAzure_connectionString": {
+			"value": ""
+		},
 		"ls_RawFile_DL_accountKey": {
 			"value": ""
 		},

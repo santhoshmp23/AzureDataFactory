@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adfPracticesanthosh"
 		},
+		"SqlServerAzure_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServerAzure'"
+		},
 		"ls_RawFile_DL_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_RawFile_DL'"
@@ -49,6 +53,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"SqlServerAzure_connectionString": {
+						"value": "[parameters('SqlServerAzure_connectionString')]"
 					},
 					"ls_RawFile_DL_accountKey": {
 						"value": "[parameters('ls_RawFile_DL_accountKey')]"
