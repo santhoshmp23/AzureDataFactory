@@ -33,6 +33,42 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Sink_Teams')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServerAzure",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Sink_Data"
+				},
+				"annotations": [
+					"DatabaseTables"
+				],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "TeamName",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "tblTeams"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServerAzure')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ds_src_Movie')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -385,39 +421,186 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Sink_Teams')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServerAzure",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Sink_Data"
-				},
-				"annotations": [
-					"DatabaseTables"
-				],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "Id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "TeamName",
-						"type": "varchar"
-					}
-				],
+				"type": "MappingDataFlow",
 				"typeProperties": {
-					"schema": "dbo",
-					"table": "tblTeams"
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_src_matches",
+								"type": "DatasetReference"
+							},
+							"name": "SrcTeamNames1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_src_matches",
+								"type": "DatasetReference"
+							},
+							"name": "SrcTeamName2"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Sink_Teams",
+								"type": "DatasetReference"
+							},
+							"name": "DestDistinctTeamNames"
+						}
+					],
+					"transformations": [
+						{
+							"name": "SelectOnlyTeam1"
+						},
+						{
+							"name": "SelectOnlyTeam2"
+						},
+						{
+							"name": "UnionTwoTeams"
+						},
+						{
+							"name": "DistinctTeams"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id as integer,",
+						"          season as short,",
+						"          city as string,",
+						"          date as date,",
+						"          team1 as string,",
+						"          team2 as string,",
+						"          toss_winner as string,",
+						"          toss_decision as string,",
+						"          result as string,",
+						"          dl_applied as boolean,",
+						"          winner as string,",
+						"          win_by_runs as short,",
+						"          win_by_wickets as short,",
+						"          player_of_match as string,",
+						"          venue as string,",
+						"          umpire1 as string,",
+						"          umpire2 as string,",
+						"          umpire3 as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> SrcTeamNames1",
+						"source(output(",
+						"          id as integer,",
+						"          season as short,",
+						"          city as string,",
+						"          date as date,",
+						"          team1 as string,",
+						"          team2 as string,",
+						"          toss_winner as string,",
+						"          toss_decision as string,",
+						"          result as string,",
+						"          dl_applied as boolean,",
+						"          winner as string,",
+						"          win_by_runs as short,",
+						"          win_by_wickets as short,",
+						"          player_of_match as string,",
+						"          venue as string,",
+						"          umpire1 as string,",
+						"          umpire2 as string,",
+						"          umpire3 as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> SrcTeamName2",
+						"SrcTeamNames1 select(mapColumn(",
+						"          team1",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SelectOnlyTeam1",
+						"SrcTeamName2 select(mapColumn(",
+						"          team2",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SelectOnlyTeam2",
+						"SelectOnlyTeam1, SelectOnlyTeam2 union(byName: true)~> UnionTwoTeams",
+						"UnionTwoTeams aggregate(groupBy(team1),",
+						"     TeamCount = count(team1)) ~> DistinctTeams",
+						"DistinctTeams sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Id as integer,",
+						"          TeamName as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          TeamName = team1",
+						"     )) ~> DestDistinctTeamNames"
+					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServerAzure')]"
+				"[concat(variables('factoryId'), '/datasets/ds_src_matches')]",
+				"[concat(variables('factoryId'), '/datasets/Sink_Teams')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Ingest_Teams')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF_Teams",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"SrcTeamNames1": {
+										"pDataLakeName": "https://saadfpractivedl.dfs.core.windows.net/"
+									},
+									"SrcTeamName2": {
+										"pDataLakeName": "https://saadfpractivedl.dfs.core.windows.net/"
+									},
+									"DestDistinctTeamNames": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
 			]
 		},
 		{
