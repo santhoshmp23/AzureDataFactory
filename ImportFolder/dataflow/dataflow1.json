@@ -19,13 +19,27 @@
 					"name": "SrcTeamName2"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Sink_Teams",
+						"type": "DatasetReference"
+					},
+					"name": "DestDistinctTeamNames"
+				}
+			],
 			"transformations": [
 				{
 					"name": "SelectOnlyTeam1"
 				},
 				{
 					"name": "SelectOnlyTeam2"
+				},
+				{
+					"name": "UnionTwoTeams"
+				},
+				{
+					"name": "DistinctTeams"
 				}
 			],
 			"scriptLines": [
@@ -84,7 +98,27 @@
 				"          team2",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> SelectOnlyTeam2"
+				"     skipDuplicateMapOutputs: true) ~> SelectOnlyTeam2",
+				"SelectOnlyTeam1, SelectOnlyTeam2 union(byName: true)~> UnionTwoTeams",
+				"UnionTwoTeams aggregate(groupBy(team1),",
+				"     TeamCount = count(team1)) ~> DistinctTeams",
+				"DistinctTeams sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Id as integer,",
+				"          TeamName as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          TeamName = team1",
+				"     )) ~> DestDistinctTeamNames"
 			]
 		}
 	}
