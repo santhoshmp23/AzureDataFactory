@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "DF_Teams",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
