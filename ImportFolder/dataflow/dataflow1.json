@@ -21,6 +21,10 @@
 					"name": "DestDistinctTeamNames"
 				},
 				{
+					"linkedService": {
+						"referenceName": "SqlServerAzure",
+						"type": "LinkedServiceReference"
+					},
 					"name": "DestDistinctCity"
 				}
 			],
@@ -87,7 +91,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> SelectOnlyCity",
 				"SelectOnlyCity aggregate(groupBy(MatchCity),",
-				"     MatchCity = count(MatchCity)) ~> DistinctCity",
+				"     MatchCityCount = count(MatchCity)) ~> DistinctCity",
 				"DistinctTeams sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -108,8 +112,21 @@
 				"     )) ~> DestDistinctTeamNames",
 				"DistinctCity sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'tblCity',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     truncate: true,",
+				"     postSQLs:['DELETE FROM tblCity WHERE CityName is NULL or CityName=\\'\\''],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> DestDistinctCity"
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          CityName = MatchCity",
+				"     )) ~> DestDistinctCity"
 			]
 		}
 	}
