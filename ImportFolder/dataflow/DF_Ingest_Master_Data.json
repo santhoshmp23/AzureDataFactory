@@ -46,6 +46,9 @@
 				},
 				{
 					"name": "DistinctCity"
+				},
+				{
+					"name": "SelectOnlyVenue"
 				}
 			],
 			"scriptLines": [
@@ -92,6 +95,11 @@
 				"     skipDuplicateMapOutputs: true) ~> SelectOnlyCity",
 				"SelectOnlyCity aggregate(groupBy(MatchCity),",
 				"     MatchCityCount = count(MatchCity)) ~> DistinctCity",
+				"SrcMatches select(mapColumn(",
+				"          venue",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectOnlyVenue",
 				"DistinctTeams sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
