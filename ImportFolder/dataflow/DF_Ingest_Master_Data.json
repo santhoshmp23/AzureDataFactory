@@ -26,6 +26,9 @@
 						"type": "LinkedServiceReference"
 					},
 					"name": "DestDistinctCity"
+				},
+				{
+					"name": "sink1"
 				}
 			],
 			"transformations": [
@@ -49,6 +52,9 @@
 				},
 				{
 					"name": "SelectOnlyVenue"
+				},
+				{
+					"name": "DistinctVenue"
 				}
 			],
 			"scriptLines": [
@@ -96,10 +102,12 @@
 				"SelectOnlyCity aggregate(groupBy(MatchCity),",
 				"     MatchCityCount = count(MatchCity)) ~> DistinctCity",
 				"SrcMatches select(mapColumn(",
-				"          venue",
+				"          StadiumName = venue",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> SelectOnlyVenue",
+				"SelectOnlyVenue aggregate(groupBy(StadiumName),",
+				"     StadiumNameCount = count(StadiumName)) ~> DistinctVenue",
 				"DistinctTeams sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -134,7 +142,11 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
 				"          CityName = MatchCity",
-				"     )) ~> DestDistinctCity"
+				"     )) ~> DestDistinctCity",
+				"DistinctVenue sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
