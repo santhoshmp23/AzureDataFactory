@@ -33,6 +33,58 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Ingest_Teams')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF_Teams",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"SrcTeamNames1": {
+										"pDataLakeName": "https://saadfpractivedl.dfs.core.windows.net/"
+									},
+									"SrcTeamName2": {
+										"pDataLakeName": "https://saadfpractivedl.dfs.core.windows.net/"
+									},
+									"DestDistinctTeamNames": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Sink_Teams')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -538,6 +590,7 @@
 						"     upsertable:false,",
 						"     truncate:true,",
 						"     format: 'table',",
+						"     postSQLs:['Delete from tblTeams where teamName is null or teamName=\\'\\''],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     mapColumn(",
@@ -549,58 +602,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_src_matches')]",
 				"[concat(variables('factoryId'), '/datasets/Sink_Teams')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Ingest_Teams')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "DF_Teams",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "dataflow1",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"SrcTeamNames1": {
-										"pDataLakeName": "https://saadfpractivedl.dfs.core.windows.net/"
-									},
-									"SrcTeamName2": {
-										"pDataLakeName": "https://saadfpractivedl.dfs.core.windows.net/"
-									},
-									"DestDistinctTeamNames": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
 			]
 		},
 		{
