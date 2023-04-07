@@ -17,7 +17,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow1",
+						"referenceName": "DF_Ingest_Master_Data",
 						"type": "DataFlowReference",
 						"datasetParameters": {
 							"SrcMatches": {
