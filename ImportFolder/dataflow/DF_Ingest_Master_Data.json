@@ -28,7 +28,11 @@
 					"name": "DestDistinctCity"
 				},
 				{
-					"name": "sink1"
+					"linkedService": {
+						"referenceName": "SqlServerAzure",
+						"type": "LinkedServiceReference"
+					},
+					"name": "DestDistinctVenue"
 				}
 			],
 			"transformations": [
@@ -145,8 +149,22 @@
 				"     )) ~> DestDistinctCity",
 				"DistinctVenue sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'tblVenues',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     truncate: true,",
+				"     postSQLs:['Delete from tblVenues where venueName is null or venueName=\\'\\''],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     mapColumn(",
+				"          VenueName = StadiumName",
+				"     )) ~> DestDistinctVenue"
 			]
 		}
 	}
