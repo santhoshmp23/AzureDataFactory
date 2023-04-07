@@ -1,0 +1,29 @@
+{
+	"name": "MatchCity",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServerAzure",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Sink_Data"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CityName",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "tblCity"
+		}
+	}
+}
