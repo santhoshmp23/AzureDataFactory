@@ -437,6 +437,40 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/MatchCity')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServerAzure",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Sink_Data"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CityName",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "tblCity"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServerAzure')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -449,14 +483,7 @@
 								"referenceName": "ds_src_matches",
 								"type": "DatasetReference"
 							},
-							"name": "SrcTeamNames1"
-						},
-						{
-							"dataset": {
-								"referenceName": "ds_src_matches",
-								"type": "DatasetReference"
-							},
-							"name": "SrcTeamName2"
+							"name": "SrcMatches"
 						}
 					],
 					"sinks": [
@@ -466,6 +493,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "DestDistinctTeamNames"
+						},
+						{
+							"linkedService": {
+								"referenceName": "SqlServerAzure",
+								"type": "LinkedServiceReference"
+							},
+							"name": "DestDistinctCity"
 						}
 					],
 					"transformations": [
@@ -480,6 +514,12 @@
 						},
 						{
 							"name": "DistinctTeams"
+						},
+						{
+							"name": "SelectOnlyCity"
+						},
+						{
+							"name": "DistinctCity"
 						}
 					],
 					"scriptLines": [
@@ -505,36 +545,13 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> SrcTeamNames1",
-						"source(output(",
-						"          id as integer,",
-						"          season as short,",
-						"          city as string,",
-						"          date as date,",
-						"          team1 as string,",
-						"          team2 as string,",
-						"          toss_winner as string,",
-						"          toss_decision as string,",
-						"          result as string,",
-						"          dl_applied as boolean,",
-						"          winner as string,",
-						"          win_by_runs as short,",
-						"          win_by_wickets as short,",
-						"          player_of_match as string,",
-						"          venue as string,",
-						"          umpire1 as string,",
-						"          umpire2 as string,",
-						"          umpire3 as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> SrcTeamName2",
-						"SrcTeamNames1 select(mapColumn(",
+						"     ignoreNoFilesFound: false) ~> SrcMatches",
+						"SrcMatches select(mapColumn(",
 						"          team1",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> SelectOnlyTeam1",
-						"SrcTeamName2 select(mapColumn(",
+						"SrcMatches select(mapColumn(",
 						"          team2",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
@@ -542,6 +559,13 @@
 						"SelectOnlyTeam1, SelectOnlyTeam2 union(byName: true)~> UnionTwoTeams",
 						"UnionTwoTeams aggregate(groupBy(team1),",
 						"     TeamCount = count(team1)) ~> DistinctTeams",
+						"SrcMatches select(mapColumn(",
+						"          MatchCity = city",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SelectOnlyCity",
+						"SelectOnlyCity aggregate(groupBy(MatchCity),",
+						"     MatchCityCount = count(MatchCity)) ~> DistinctCity",
 						"DistinctTeams sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
@@ -559,13 +583,31 @@
 						"     skipDuplicateMapOutputs: true,",
 						"     mapColumn(",
 						"          TeamName = team1",
-						"     )) ~> DestDistinctTeamNames"
+						"     )) ~> DestDistinctTeamNames",
+						"DistinctCity sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'tblCity',",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     deletable: false,",
+						"     upsertable: false,",
+						"     truncate: true,",
+						"     postSQLs:['DELETE FROM tblCity WHERE CityName is NULL or CityName=\\'\\''],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          CityName = MatchCity",
+						"     )) ~> DestDistinctCity"
 					]
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_src_matches')]",
-				"[concat(variables('factoryId'), '/datasets/Sink_Teams')]"
+				"[concat(variables('factoryId'), '/datasets/Sink_Teams')]",
+				"[concat(variables('factoryId'), '/linkedServices/SqlServerAzure')]"
 			]
 		},
 		{
@@ -592,13 +634,11 @@
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"SrcTeamNames1": {
+									"SrcMatches": {
 										"pDataLakeName": "https://saadfpractivedl.dfs.core.windows.net/"
 									},
-									"SrcTeamName2": {
-										"pDataLakeName": "https://saadfpractivedl.dfs.core.windows.net/"
-									},
-									"DestDistinctTeamNames": {}
+									"DestDistinctTeamNames": {},
+									"DestDistinctCity": {}
 								}
 							},
 							"staging": {},
