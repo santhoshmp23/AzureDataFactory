@@ -437,41 +437,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MatchCity')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServerAzure",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Sink_Data"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "Id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CityName",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "tblCity"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServerAzure')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"name": "[concat(parameters('factoryName'), '/DF_Ingest_Master_Data')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -500,6 +466,13 @@
 								"type": "LinkedServiceReference"
 							},
 							"name": "DestDistinctCity"
+						},
+						{
+							"linkedService": {
+								"referenceName": "SqlServerAzure",
+								"type": "LinkedServiceReference"
+							},
+							"name": "DestDistinctVenue"
 						}
 					],
 					"transformations": [
@@ -520,6 +493,12 @@
 						},
 						{
 							"name": "DistinctCity"
+						},
+						{
+							"name": "SelectOnlyVenue"
+						},
+						{
+							"name": "DistinctVenue"
 						}
 					],
 					"scriptLines": [
@@ -566,6 +545,13 @@
 						"     skipDuplicateMapOutputs: true) ~> SelectOnlyCity",
 						"SelectOnlyCity aggregate(groupBy(MatchCity),",
 						"     MatchCityCount = count(MatchCity)) ~> DistinctCity",
+						"SrcMatches select(mapColumn(",
+						"          StadiumName = venue",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SelectOnlyVenue",
+						"SelectOnlyVenue aggregate(groupBy(StadiumName),",
+						"     StadiumNameCount = count(StadiumName)) ~> DistinctVenue",
 						"DistinctTeams sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
@@ -600,7 +586,25 @@
 						"     skipDuplicateMapOutputs: true,",
 						"     mapColumn(",
 						"          CityName = MatchCity",
-						"     )) ~> DestDistinctCity"
+						"     )) ~> DestDistinctCity",
+						"DistinctVenue sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'tblVenues',",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     deletable: false,",
+						"     upsertable: false,",
+						"     truncate: true,",
+						"     postSQLs:['Delete from tblVenues where venueName is null or venueName=\\'\\''],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     saveOrder: 1,",
+						"     mapColumn(",
+						"          VenueName = StadiumName",
+						"     )) ~> DestDistinctVenue"
 					]
 				}
 			},
@@ -617,7 +621,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "DF_Teams",
+						"name": "DF_MasterData",
+						"description": "This will ingest Teams, City and Venue",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -630,7 +635,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "dataflow1",
+								"referenceName": "DF_Ingest_Master_Data",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -638,7 +643,8 @@
 										"pDataLakeName": "https://saadfpractivedl.dfs.core.windows.net/"
 									},
 									"DestDistinctTeamNames": {},
-									"DestDistinctCity": {}
+									"DestDistinctCity": {},
+									"DestDistinctVenue": {}
 								}
 							},
 							"staging": {},
@@ -657,7 +663,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+				"[concat(variables('factoryId'), '/dataflows/DF_Ingest_Master_Data')]"
 			]
 		}
 	]
