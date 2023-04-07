@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "DF_Ingest_Master_Data",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
