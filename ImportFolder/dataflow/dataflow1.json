@@ -19,6 +19,9 @@
 						"type": "DatasetReference"
 					},
 					"name": "DestDistinctTeamNames"
+				},
+				{
+					"name": "DestDistinctCity"
 				}
 			],
 			"transformations": [
@@ -33,6 +36,12 @@
 				},
 				{
 					"name": "DistinctTeams"
+				},
+				{
+					"name": "SelectOnlyCity"
+				},
+				{
+					"name": "DistinctCity"
 				}
 			],
 			"scriptLines": [
@@ -72,6 +81,13 @@
 				"SelectOnlyTeam1, SelectOnlyTeam2 union(byName: true)~> UnionTwoTeams",
 				"UnionTwoTeams aggregate(groupBy(team1),",
 				"     TeamCount = count(team1)) ~> DistinctTeams",
+				"SrcMatches select(mapColumn(",
+				"          MatchCity = city",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectOnlyCity",
+				"SelectOnlyCity aggregate(groupBy(MatchCity),",
+				"     MatchCity = count(MatchCity)) ~> DistinctCity",
 				"DistinctTeams sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -89,7 +105,11 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
 				"          TeamName = team1",
-				"     )) ~> DestDistinctTeamNames"
+				"     )) ~> DestDistinctTeamNames",
+				"DistinctCity sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DestDistinctCity"
 			]
 		}
 	}
