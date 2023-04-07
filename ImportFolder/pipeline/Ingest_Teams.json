@@ -3,7 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "DF_Teams",
+				"name": "DF_MasterData",
+				"description": "This will ingest Teams, City and Venue",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
