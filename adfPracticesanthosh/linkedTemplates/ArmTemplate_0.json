@@ -550,7 +550,7 @@
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> SelectOnlyVenue",
-						"SelectOnlyVenue aggregate(groupBy(StadiumName),",
+						"SelectOnlyVenue aggregate(groupBy(StadiumName = substringIndex(StadiumName,',',1)),",
 						"     StadiumNameCount = count(StadiumName)) ~> DistinctVenue",
 						"DistinctTeams sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
