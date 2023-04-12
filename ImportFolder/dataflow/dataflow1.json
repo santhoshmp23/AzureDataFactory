@@ -60,7 +60,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> SrcMatches",
-				"SrcMatches derive(venue = ERROR_FUNCTION('')) ~> derivedColumn1"
+				"SrcMatches derive(TrimmedVenue = substring(venue,1,length(venue),',')) ~> derivedColumn1"
 			]
 		}
 	}
