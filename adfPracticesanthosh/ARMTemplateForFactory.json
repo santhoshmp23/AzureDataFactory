@@ -132,6 +132,7 @@
 								"sqlWriterUseTableLock": false
 							},
 							"enableStaging": false,
+							"enableSkipIncompatibleRow": true,
 							"translator": {
 								"type": "TabularTranslator",
 								"mappings": [
@@ -309,7 +310,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/srcZomatoSourceRawData')]",
-				"[concat(variables('factoryId'), '/datasets/sinkZomatoRawData')]"
+				"[concat(variables('factoryId'), '/datasets/sinkZomatoRawData')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_RawFile_DL')]"
 			]
 		},
 		{
