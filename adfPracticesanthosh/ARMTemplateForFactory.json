@@ -136,7 +136,8 @@
 								"mappings": [
 									{
 										"source": {
-											"name": ""
+											"name": "Id",
+											"physicalType": "String"
 										},
 										"sink": {
 											"name": "id",
@@ -146,7 +147,8 @@
 									},
 									{
 										"source": {
-											"name": ""
+											"name": "restaurant name",
+											"physicalType": "String"
 										},
 										"sink": {
 											"name": "RestaurantName",
@@ -156,7 +158,8 @@
 									},
 									{
 										"source": {
-											"name": ""
+											"name": "restaurant type",
+											"physicalType": "String"
 										},
 										"sink": {
 											"name": "RestaurantType",
@@ -166,7 +169,8 @@
 									},
 									{
 										"source": {
-											"name": ""
+											"name": "rate",
+											"physicalType": "String"
 										},
 										"sink": {
 											"name": "AverageRating",
@@ -176,7 +180,8 @@
 									},
 									{
 										"source": {
-											"name": ""
+											"name": "numofratings",
+											"physicalType": "String"
 										},
 										"sink": {
 											"name": "NumberofRating",
@@ -186,7 +191,8 @@
 									},
 									{
 										"source": {
-											"name": ""
+											"name": "avgcost",
+											"physicalType": "String"
 										},
 										"sink": {
 											"name": "AverageCost",
@@ -198,7 +204,8 @@
 									},
 									{
 										"source": {
-											"name": ""
+											"name": "online_order",
+											"physicalType": "String"
 										},
 										"sink": {
 											"name": "OnlineBooking",
@@ -208,7 +215,8 @@
 									},
 									{
 										"source": {
-											"name": ""
+											"name": "cuisines type",
+											"physicalType": "String"
 										},
 										"sink": {
 											"name": "Cusine",
@@ -218,7 +226,8 @@
 									},
 									{
 										"source": {
-											"name": ""
+											"name": "area",
+											"physicalType": "String"
 										},
 										"sink": {
 											"name": "Area",
@@ -228,7 +237,8 @@
 									},
 									{
 										"source": {
-											"name": ""
+											"name": "local address",
+											"physicalType": "String"
 										},
 										"sink": {
 											"name": "LocalAddress",
