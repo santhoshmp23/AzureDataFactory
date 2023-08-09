@@ -560,9 +560,7 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "Id",
-											"type": "String",
-											"physicalType": "String"
+											"name": ""
 										},
 										"sink": {
 											"name": "id",
@@ -572,9 +570,7 @@
 									},
 									{
 										"source": {
-											"name": "restaurant name",
-											"type": "String",
-											"physicalType": "String"
+											"name": ""
 										},
 										"sink": {
 											"name": "RestaurantName",
@@ -584,9 +580,7 @@
 									},
 									{
 										"source": {
-											"name": "restaurant type",
-											"type": "String",
-											"physicalType": "String"
+											"name": ""
 										},
 										"sink": {
 											"name": "RestaurantType",
@@ -596,9 +590,7 @@
 									},
 									{
 										"source": {
-											"name": "rate",
-											"type": "String",
-											"physicalType": "String"
+											"name": ""
 										},
 										"sink": {
 											"name": "AverageRating",
@@ -608,9 +600,7 @@
 									},
 									{
 										"source": {
-											"name": "numofratings",
-											"type": "String",
-											"physicalType": "String"
+											"name": ""
 										},
 										"sink": {
 											"name": "NumberofRating",
@@ -620,9 +610,7 @@
 									},
 									{
 										"source": {
-											"name": "avgcost",
-											"type": "String",
-											"physicalType": "String"
+											"name": ""
 										},
 										"sink": {
 											"name": "AverageCost",
@@ -634,9 +622,7 @@
 									},
 									{
 										"source": {
-											"name": "online_order",
-											"type": "String",
-											"physicalType": "String"
+											"name": ""
 										},
 										"sink": {
 											"name": "OnlineBooking",
@@ -646,21 +632,7 @@
 									},
 									{
 										"source": {
-											"name": "table booking",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "TableBooking",
-											"type": "Boolean",
-											"physicalType": "bit"
-										}
-									},
-									{
-										"source": {
-											"name": "cuisines type",
-											"type": "String",
-											"physicalType": "String"
+											"name": ""
 										},
 										"sink": {
 											"name": "Cusine",
@@ -670,9 +642,7 @@
 									},
 									{
 										"source": {
-											"name": "area",
-											"type": "String",
-											"physicalType": "String"
+											"name": ""
 										},
 										"sink": {
 											"name": "Area",
@@ -682,9 +652,7 @@
 									},
 									{
 										"source": {
-											"name": "local address",
-											"type": "String",
-											"physicalType": "String"
+											"name": ""
 										},
 										"sink": {
 											"name": "LocalAddress",
