@@ -39,7 +39,24 @@
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false
 					},
-					"enableStaging": false,
+					"enableStaging": true,
+					"enableSkipIncompatibleRow": true,
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Warning",
+							"enableReliableLogging": false
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "ls_RawFile_DL",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"DataLake_Url": "https://saadfpractivedl.dfs.core.windows.net/"
+								}
+							}
+						}
+					},
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
