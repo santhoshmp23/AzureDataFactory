@@ -17,16 +17,35 @@
 				"typeProperties": {
 					"source": {
 						"type": "DelimitedTextSource",
+						"additionalColumns": [
+							{
+								"name": "CreatedBy",
+								"value": "Santhosh"
+							}
+						],
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
+							"recursive": false,
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
 							"type": "DelimitedTextReadSettings"
 						}
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
@@ -34,8 +53,17 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"pLocDirectoryName": "raw-files",
-							"pLocFIleName": "Test.csv"
+							"pLocFIleName": {
+								"value": "@pipeline().globalParameters.pRawFileName",
+								"type": "Expression"
+							}
 						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sinkZomatoRawData",
+						"type": "DatasetReference"
 					}
 				]
 			}
