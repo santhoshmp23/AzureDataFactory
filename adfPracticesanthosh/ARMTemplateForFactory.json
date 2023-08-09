@@ -26,6 +26,10 @@
 		"default_properties_pDatalakeName_value": {
 			"type": "string",
 			"defaultValue": "https://saadfpractivedl.dfs.core.windows.net/"
+		},
+		"default_properties_pRawFileName_value": {
+			"type": "string",
+			"defaultValue": "zomato.csv"
 		}
 	},
 	"variables": {
@@ -82,6 +86,229 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/DF_Ingest_Master_Data')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ZomataDataProcessing')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "cp_RawData_Zomato",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 2,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"additionalColumns": [
+									{
+										"name": "CreatedBy",
+										"value": "Santhosh"
+									}
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": false,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"preCopyScript": "Truncate table tblZomato",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Unnamed: 0",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "id",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "restaurant name",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "RestaurantName",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "restaurant type",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "RestaurantType",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "rate (out of 5)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "AverageRating",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "num of ratings",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "NumberofRating",
+											"type": "Int64",
+											"physicalType": "bigint"
+										}
+									},
+									{
+										"source": {
+											"name": "avg cost (two people)",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "AverageCost",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 18
+										}
+									},
+									{
+										"source": {
+											"name": "online_order",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "OnlineBooking",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "table booking",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TableBooking",
+											"type": "Boolean",
+											"physicalType": "bit"
+										}
+									},
+									{
+										"source": {
+											"name": "cuisines type",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Cusine",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "area",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Area",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "local address",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "LocalAddress",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "srcZomatoSourceRawData",
+								"type": "DatasetReference",
+								"parameters": {
+									"pLocDirectoryName": "raw-files",
+									"pLocFIleName": {
+										"value": "@pipeline().globalParameters.pRawFileName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sinkZomatoRawData",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [
+					"plZomato"
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/srcZomatoSourceRawData')]",
+				"[concat(variables('factoryId'), '/datasets/sinkZomatoRawData')]"
 			]
 		},
 		{
@@ -432,6 +659,74 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/sinkZomatoRawData')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServerAzure",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "tblZomato"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServerAzure')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/srcZomatoSourceRawData')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_RawFile_DL",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DataLake_Url": "https://saadfpractivedl.dfs.core.windows.net/"
+					}
+				},
+				"parameters": {
+					"pLocDirectoryName": {
+						"type": "String",
+						"defaultValue": "raw-files"
+					},
+					"pLocFIleName": {
+						"type": "String",
+						"defaultValue": "Test.csv"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().pLocFIleName",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().pLocDirectoryName",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_RawFile_DL')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SqlServerAzure')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -662,6 +957,10 @@
 				"pDatalakeName": {
 					"type": "string",
 					"value": "[parameters('default_properties_pDatalakeName_value')]"
+				},
+				"pRawFileName": {
+					"type": "string",
+					"value": "[parameters('default_properties_pRawFileName_value')]"
 				}
 			},
 			"dependsOn": []

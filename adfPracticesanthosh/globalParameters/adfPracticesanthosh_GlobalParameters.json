@@ -6,5 +6,9 @@
 	"pDatalakeName": {
 		"type": "string",
 		"value": "https://saadfpractivedl.dfs.core.windows.net/"
+	},
+	"pRawFileName": {
+		"type": "string",
+		"value": "zomato.csv"
 	}
 }

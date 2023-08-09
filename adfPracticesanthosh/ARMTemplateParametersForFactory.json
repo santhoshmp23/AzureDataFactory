@@ -19,6 +19,9 @@
 		},
 		"default_properties_pDatalakeName_value": {
 			"value": "https://saadfpractivedl.dfs.core.windows.net/"
+		},
+		"default_properties_pRawFileName_value": {
+			"value": "zomato.csv"
 		}
 	}
 }
