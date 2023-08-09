@@ -34,12 +34,149 @@
 					},
 					"sink": {
 						"type": "SqlServerSink",
+						"preCopyScript": "Truncate table tblZomato",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Unnamed: 0",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "id",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "restaurant name",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RestaurantName",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "restaurant type",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "RestaurantType",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "rate (out of 5)",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AverageRating",
+									"type": "Double",
+									"physicalType": "float"
+								}
+							},
+							{
+								"source": {
+									"name": "num of ratings",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "NumberofRating",
+									"type": "Int64",
+									"physicalType": "bigint"
+								}
+							},
+							{
+								"source": {
+									"name": "avg cost (two people)",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "AverageCost",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 0,
+									"precision": 18
+								}
+							},
+							{
+								"source": {
+									"name": "online_order",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "OnlineBooking",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "table booking",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "TableBooking",
+									"type": "Boolean",
+									"physicalType": "bit"
+								}
+							},
+							{
+								"source": {
+									"name": "cuisines type",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Cusine",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "area",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Area",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "local address",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LocalAddress",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
