@@ -130,18 +130,6 @@
 							},
 							{
 								"source": {
-									"name": "table booking",
-									"type": "String",
-									"physicalType": "String"
-								},
-								"sink": {
-									"name": "TableBooking",
-									"type": "Boolean",
-									"physicalType": "bit"
-								}
-							},
-							{
-								"source": {
 									"name": "cuisines type",
 									"type": "String",
 									"physicalType": "String"
