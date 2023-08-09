@@ -545,8 +545,7 @@
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
-									"type": "DelimitedTextReadSettings",
-									"skipLineCount": 1
+									"type": "DelimitedTextReadSettings"
 								}
 							},
 							"sink": {
@@ -562,7 +561,7 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "Unnamed: 0",
+											"name": "Id",
 											"type": "String",
 											"physicalType": "String"
 										},
@@ -598,7 +597,7 @@
 									},
 									{
 										"source": {
-											"name": "rate (out of 5)",
+											"name": "rate",
 											"type": "String",
 											"physicalType": "String"
 										},
@@ -610,7 +609,7 @@
 									},
 									{
 										"source": {
-											"name": "num of ratings",
+											"name": "numofratings",
 											"type": "String",
 											"physicalType": "String"
 										},
@@ -622,7 +621,7 @@
 									},
 									{
 										"source": {
-											"name": "avg cost (two people)",
+											"name": "avgcost",
 											"type": "String",
 											"physicalType": "String"
 										},
@@ -734,8 +733,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/srcZomatoSourceRawData')]",
-				"[concat(variables('factoryId'), '/datasets/sinkZomatoRawData')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_RawFile_DL')]"
+				"[concat(variables('factoryId'), '/datasets/sinkZomatoRawData')]"
 			]
 		},
 		{
