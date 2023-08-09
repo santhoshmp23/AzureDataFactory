@@ -45,7 +45,6 @@
 							{
 								"source": {
 									"name": "Id",
-									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
@@ -57,7 +56,6 @@
 							{
 								"source": {
 									"name": "restaurant name",
-									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
@@ -69,7 +67,6 @@
 							{
 								"source": {
 									"name": "restaurant type",
-									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
@@ -81,7 +78,6 @@
 							{
 								"source": {
 									"name": "rate",
-									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
@@ -93,7 +89,6 @@
 							{
 								"source": {
 									"name": "numofratings",
-									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
@@ -105,7 +100,6 @@
 							{
 								"source": {
 									"name": "avgcost",
-									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
@@ -119,7 +113,6 @@
 							{
 								"source": {
 									"name": "online_order",
-									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
@@ -131,7 +124,6 @@
 							{
 								"source": {
 									"name": "cuisines type",
-									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
@@ -143,7 +135,6 @@
 							{
 								"source": {
 									"name": "area",
-									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
@@ -155,7 +146,6 @@
 							{
 								"source": {
 									"name": "local address",
-									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
