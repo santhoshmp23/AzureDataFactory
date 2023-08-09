@@ -1,0 +1,42 @@
+{
+	"name": "srcZomatoSourceRawData",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_RawFile_DL",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DataLake_Url": "https://saadfpractivedl.dfs.core.windows.net/"
+			}
+		},
+		"parameters": {
+			"pLocDirectoryName": {
+				"type": "String",
+				"defaultValue": "raw-files"
+			},
+			"pLocFIleName": {
+				"type": "String",
+				"defaultValue": "Test.csv"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().pLocFIleName",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().pLocDirectoryName",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
