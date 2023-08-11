@@ -852,14 +852,7 @@
 							"name": "SinkTurbinesData"
 						}
 					],
-					"transformations": [
-						{
-							"name": "alterRow1"
-						},
-						{
-							"name": "cast1"
-						}
-					],
+					"transformations": [],
 					"scriptLines": [
 						"parameters{",
 						"     vTurbineOEM as string (\"Gamesa\")",
@@ -899,13 +892,7 @@
 						"     store: 'sqlserver',",
 						"     query: (\"SELECT TurbineData.RegionName,TurbineData.CountryName,TurbineData.ScadaParkId,TurbineData.ScadaParkSourceId,TurbineData.ScadaParkName, TurbineData.TurbineOEM, TurbineData.OEMTechnicalId AS OEMTechnicalId, TurbineData.TechnicalId, TurbineData.TurbineId,  cast(StationData.StationName as varchar(max)) StationName, TurbineData.TurbinePlatform, TurbineData.TurbineModel,TurbineData.TurbineType, TurbineData.Timezone, TurbineData.ControllerFamily, TurbineData.ControllerTypeDesc, TurbineData.Latitude,TurbineData.Longitude,  NULL as IPAddress,NULL as SoftwareVersion ,  CAST(TurbineData.CreatedDate AS DATE) CreatedDate,CAST(TurbineData.LastModifyDate AS DATE) LastModifyDate FROM [dbo].[TurbineMasterData] TurbineData  LEFT JOIN [StationMaster] StationData ON TurbineData.TurbineId=StationData.IdStation  WHERE TurbineData.TurbineOEM='\"+$vTurbineOEM+\"'\"),",
 						"     isolationLevel: 'READ_UNCOMMITTED') ~> SrcTurbinesData",
-						"cast1 alterRow(updateIf(TurbineId==TurbineId),",
-						"     insertIf(TurbineId<=>TurbineId)) ~> alterRow1",
-						"SrcTurbinesData cast(output(",
-						"          TurbineId as string",
-						"     ),",
-						"     errors: true) ~> cast1",
-						"alterRow1 sink(allowSchemaDrift: true,",
+						"SrcTurbinesData sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
 						"          ID as long,",
@@ -939,10 +926,9 @@
 						"     schemaName: 'dbo',",
 						"     tableName: 'TurbineData',",
 						"     insertable: true,",
-						"     updateable: true,",
-						"     deletable: true,",
-						"     upsertable: true,",
-						"     keys:['TurbineId'],",
+						"     updateable: false,",
+						"     deletable: false,",
+						"     upsertable: false,",
 						"     stagingSchemaName: '',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
