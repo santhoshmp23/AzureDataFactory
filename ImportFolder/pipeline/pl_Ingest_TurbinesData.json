@@ -15,16 +15,6 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataflow": {
-						"referenceName": "DF_TurbinesData_Gamesa",
-						"type": "DataFlowReference",
-						"parameters": {
-							"vTurbineOEM": {
-								"value": "'@{pipeline().globalParameters.pTurbineOEM}'",
-								"type": "Expression"
-							}
-						}
-					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
@@ -32,9 +22,6 @@
 					"traceLevel": "None",
 					"cacheSinks": {
 						"firstRowOnly": true
-					},
-					"continuationSettings": {
-						"customizedCheckpointKey": "5eb789f5-94f3-44a6-a69d-7ee658814813"
 					}
 				}
 			}
