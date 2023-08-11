@@ -1327,7 +1327,7 @@
 					],
 					"scriptLines": [
 						"parameters{",
-						"     vTurbineOEM as string (\"fGamesa\")",
+						"     vTurbineOEM as string (\"Gamesa\")",
 						"}",
 						"source(output(",
 						"          RegionName as string,",
@@ -1355,6 +1355,7 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
+						"     limit: 100,",
 						"     enableCdc: true,",
 						"     mode: 'read',",
 						"     skipInitialLoad: false,",
