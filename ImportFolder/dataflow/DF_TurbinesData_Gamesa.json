@@ -12,7 +12,15 @@
 					"name": "SrcTurbinesdata"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "SqlDbCon",
+						"type": "LinkedServiceReference"
+					},
+					"name": "StageDestTurbinesData"
+				}
+			],
 			"transformations": [],
 			"scriptLines": [
 				"parameters{",
@@ -26,7 +34,21 @@
 				"     format: 'query',",
 				"     store: 'sqlserver',",
 				"     query: (\"SELECT TurbineData.RegionName,TurbineData.CountryName,TurbineData.ScadaParkId,TurbineData.ScadaParkSourceId,  TurbineData.ScadaParkName, TurbineData.TurbineOEM, TurbineData.OEMTechnicalId AS OEMTechnicalId, TurbineData.TechnicalId, TurbineData.TurbineId,  cast(StationData.StationName as varchar(max)) StationName, TurbineData.TurbinePlatform, TurbineData.TurbineModel,TurbineData.TurbineType, TurbineData.Timezone, TurbineData.ControllerFamily, TurbineData.ControllerTypeDesc, TurbineData.Latitude,TurbineData.Longitude,  NULL as IPAddress,NULL as SoftwareVersion ,  CAST(TurbineData.CreatedDate AS DATE) CreatedDate,CAST(TurbineData.LastModifyDate AS DATE) LastModifyDate FROM [MasterDataAsset_General].[vTurbineMasterData] TurbineData  LEFT JOIN [MasterDataAsset_General].[vStationMaster$vTurbineOEM),",
-				"     isolationLevel: 'READ_UNCOMMITTED') ~> SrcTurbinesdata"
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> SrcTurbinesdata",
+				"SrcTurbinesdata sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: '',",
+				"     tableName: '',",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     deletable: false,",
+				"     upsertable: false,",
+				"     truncate: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> StageDestTurbinesData"
 			]
 		}
 	}
