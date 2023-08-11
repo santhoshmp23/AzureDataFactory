@@ -1,0 +1,44 @@
+{
+	"name": "pl_Ingest_TurbinesData",
+	"properties": {
+		"activities": [
+			{
+				"name": "DF_TurbinesData",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF_TurbinesData_Gamesa",
+						"type": "DataFlowReference",
+						"parameters": {
+							"vTurbineOEM": {
+								"value": "'@{pipeline().globalParameters.pTurbineOEM}'",
+								"type": "Expression"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "None",
+					"cacheSinks": {
+						"firstRowOnly": true
+					},
+					"continuationSettings": {
+						"customizedCheckpointKey": "5eb789f5-94f3-44a6-a69d-7ee658814813"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}

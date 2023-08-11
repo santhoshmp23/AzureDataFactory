@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "DF_TurbinesData_Gamesa",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
