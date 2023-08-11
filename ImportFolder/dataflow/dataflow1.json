@@ -1,0 +1,30 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"linkedService": {
+						"referenceName": "SqlDbCon",
+						"type": "LinkedServiceReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"parameters{",
+				"     vTurbineOEM as string (\"fGamesa\")",
+				"}",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'query',",
+				"     store: 'sqlserver',",
+				"     query: (\"SELECT TurbineData.RegionName,TurbineData.CountryName,TurbineData.ScadaParkId,TurbineData.ScadaParkSourceId,TurbineData.ScadaParkName, TurbineData.TurbineOEM, TurbineData.OEMTechnicalId AS OEMTechnicalId, TurbineData.TechnicalId, TurbineData.TurbineId,  cast(StationData.StationName as varchar(max)) StationName, TurbineData.TurbinePlatform, TurbineData.TurbineModel,TurbineData.TurbineType, TurbineData.Timezone, TurbineData.ControllerFamily, TurbineData.ControllerTypeDesc, TurbineData.Latitude,TurbineData.Longitude,  NULL as IPAddress,NULL as SoftwareVersion ,  CAST(TurbineData.CreatedDate AS DATE) CreatedDate,CAST(TurbineData.LastModifyDate AS DATE) LastModifyDate FROM [dbo].[TurbineMasterData] TurbineData  LEFT JOIN [StationMaster] StationData ON TurbineData.TurbineId=StationData.IdStation  WHERE TurbineData.TurbineOEM=\"+$vTurbineOEM),",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> source1"
+			]
+		}
+	}
+}
