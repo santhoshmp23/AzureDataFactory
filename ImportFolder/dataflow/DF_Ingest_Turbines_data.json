@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "DF_Ingest_Turbines_data",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
