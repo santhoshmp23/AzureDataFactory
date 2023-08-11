@@ -13,8 +13,17 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [],
 				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF_Ingest_Turbines_data",
+						"type": "DataFlowReference",
+						"parameters": {
+							"vTurbineOEM": {
+								"value": "'@{pipeline().globalParameters.pTurbineOEM}'",
+								"type": "Expression"
+							}
+						}
+					},
 					"compute": {
 						"coreCount": 8,
 						"computeType": "General"
@@ -22,6 +31,9 @@
 					"traceLevel": "None",
 					"cacheSinks": {
 						"firstRowOnly": true
+					},
+					"continuationSettings": {
+						"customizedCheckpointKey": "a9c03edd-886e-42bb-a95a-8ced89f8d296"
 					}
 				}
 			}
