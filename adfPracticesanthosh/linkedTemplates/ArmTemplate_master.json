@@ -7,6 +7,14 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adfPracticesanthosh"
 		},
+		"SQLConTSC_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SQLConTSC'"
+		},
+		"SqlDbCon_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlDbCon'"
+		},
 		"SqlServerAzure_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServerAzure'"
@@ -30,6 +38,10 @@
 		"default_properties_pRawFileName_value": {
 			"type": "string",
 			"defaultValue": "zomato.csv"
+		},
+		"default_properties_pTurbineOEM_value": {
+			"type": "string",
+			"defaultValue": "Gamesa"
 		},
 		"containerUri": {
 			"type": "string",
@@ -58,6 +70,12 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"SQLConTSC_connectionString": {
+						"value": "[parameters('SQLConTSC_connectionString')]"
+					},
+					"SqlDbCon_connectionString": {
+						"value": "[parameters('SqlDbCon_connectionString')]"
+					},
 					"SqlServerAzure_connectionString": {
 						"value": "[parameters('SqlServerAzure_connectionString')]"
 					},
@@ -72,6 +90,9 @@
 					},
 					"default_properties_pRawFileName_value": {
 						"value": "[parameters('default_properties_pRawFileName_value')]"
+					},
+					"default_properties_pTurbineOEM_value": {
+						"value": "[parameters('default_properties_pTurbineOEM_value')]"
 					},
 					"ls_RawFile_DL_properties_typeProperties_url": {
 						"value": "[parameters('ls_RawFile_DL_properties_typeProperties_url')]"

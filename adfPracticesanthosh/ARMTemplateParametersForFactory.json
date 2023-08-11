@@ -5,6 +5,12 @@
 		"factoryName": {
 			"value": "adfPracticesanthosh"
 		},
+		"SQLConTSC_connectionString": {
+			"value": ""
+		},
+		"SqlDbCon_connectionString": {
+			"value": ""
+		},
 		"SqlServerAzure_connectionString": {
 			"value": ""
 		},
@@ -22,6 +28,9 @@
 		},
 		"default_properties_pRawFileName_value": {
 			"value": "zomato.csv"
+		},
+		"default_properties_pTurbineOEM_value": {
+			"value": "Gamesa"
 		}
 	}
 }
