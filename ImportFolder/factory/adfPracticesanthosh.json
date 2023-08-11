@@ -14,7 +14,7 @@
 				"type": "string",
 				"value": "zomato.csv"
 			},
-			"TurbineOEM": {
+			"pTurbineOEM": {
 				"type": "string",
 				"value": "Gamesa"
 			}
