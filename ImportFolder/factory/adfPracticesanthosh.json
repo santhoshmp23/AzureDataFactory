@@ -13,6 +13,10 @@
 			"pRawFileName": {
 				"type": "string",
 				"value": "zomato.csv"
+			},
+			"TurbineOEM": {
+				"type": "string",
+				"value": "Gamesa"
 			}
 		}
 	},
