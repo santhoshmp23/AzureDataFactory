@@ -1,0 +1,12 @@
+{
+	"name": "SQLConTSC",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=adfpracticeserver.database.windows.net;initial catalog=TscConfigMonitoring;user id=srvadmin",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDJFQ0ZDQzcwLTk3MDgtNEY3OS04MEY4LTI2N0Y5M0M4MTBGQl8zNzBiYzczYi1lZDZlLTQ1M2EtYWQ4Yi1iZjQ4YzNhNWY4ZGEiDQp9"
+		}
+	}
+}
