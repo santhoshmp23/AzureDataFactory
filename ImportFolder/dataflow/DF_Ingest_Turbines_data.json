@@ -59,6 +59,7 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     limit: 100,",
 				"     enableCdc: true,",
 				"     mode: 'read',",
 				"     skipInitialLoad: false,",
