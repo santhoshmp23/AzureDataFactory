@@ -31,7 +31,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     vTurbineOEM as string (\"fGamesa\")",
+				"     vTurbineOEM as string (\"Gamesa\")",
 				"}",
 				"source(output(",
 				"          RegionName as string,",
