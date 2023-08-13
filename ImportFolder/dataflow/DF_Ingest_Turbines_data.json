@@ -18,7 +18,11 @@
 						"referenceName": "SQLConTSC",
 						"type": "LinkedServiceReference"
 					},
-					"name": "SinkTurbinesData"
+					"name": "SinkTurbinesData",
+					"rejectedDataLinkedService": {
+						"referenceName": "ls_Pipeline_logs",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
 			"transformations": [],
@@ -102,6 +106,9 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
+				"     outputRejectedData: true,",
+				"     outputAssertFailedRows: true,",
+				"     assertFailure_container: 'pipelinelog',",
 				"     mapColumn(",
 				"          RegionName,",
 				"          CountryName,",
