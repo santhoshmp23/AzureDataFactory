@@ -103,8 +103,6 @@
 				"     deletable: false,",
 				"     upsertable: false,",
 				"     stagingSchemaName: '',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     outputRejectedData: true,",
 				"     outputAssertFailedRows: true,",
