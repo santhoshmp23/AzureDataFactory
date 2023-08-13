@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServerAzure'"
 		},
+		"ls_Pipeline_logs_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_Pipeline_logs'"
+		},
 		"ls_RawFile_DL_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_RawFile_DL'"
@@ -109,6 +113,19 @@
 				"type": "SqlServer",
 				"typeProperties": {
 					"connectionString": "[parameters('SqlServerAzure_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_Pipeline_logs')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('ls_Pipeline_logs_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -849,7 +866,11 @@
 								"referenceName": "SQLConTSC",
 								"type": "LinkedServiceReference"
 							},
-							"name": "SinkTurbinesData"
+							"name": "SinkTurbinesData",
+							"rejectedDataLinkedService": {
+								"referenceName": "ls_Pipeline_logs",
+								"type": "LinkedServiceReference"
+							}
 						}
 					],
 					"transformations": [],
@@ -930,9 +951,10 @@
 						"     deletable: false,",
 						"     upsertable: false,",
 						"     stagingSchemaName: '',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError',",
+						"     outputRejectedData: true,",
+						"     outputAssertFailedRows: true,",
+						"     assertFailure_container: 'pipelinelog',",
 						"     mapColumn(",
 						"          RegionName,",
 						"          CountryName,",
@@ -962,7 +984,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/SqlDbCon')]",
-				"[concat(variables('factoryId'), '/linkedServices/SQLConTSC')]"
+				"[concat(variables('factoryId'), '/linkedServices/SQLConTSC')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_Pipeline_logs')]"
 			]
 		},
 		{
