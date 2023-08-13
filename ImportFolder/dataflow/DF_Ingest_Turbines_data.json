@@ -105,6 +105,9 @@
 				"     mapColumn(",
 				"          RegionName,",
 				"          CountryName,",
+				"          SiteId = ScadaParkId,",
+				"          SiteSourceId = ScadaParkSourceId,",
+				"          SiteName = ScadaParkName,",
 				"          TurbineOEM,",
 				"          OEMTechnicalId,",
 				"          TechnicalId,",
@@ -118,6 +121,8 @@
 				"          ControllerTypeDesc,",
 				"          Latitude,",
 				"          Longitude,",
+				"          IPAddress,",
+				"          SoftwareVersion,",
 				"          CreatedDate,",
 				"          LastModifyDate",
 				"     )) ~> SinkTurbinesData"
