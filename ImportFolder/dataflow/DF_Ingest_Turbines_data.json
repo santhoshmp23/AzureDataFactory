@@ -101,7 +101,26 @@
 				"     stagingSchemaName: '',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTurbinesData"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          RegionName,",
+				"          CountryName,",
+				"          TurbineOEM,",
+				"          OEMTechnicalId,",
+				"          TechnicalId,",
+				"          TurbineId,",
+				"          StationName,",
+				"          TurbinePlatform,",
+				"          TurbineModel,",
+				"          TurbineType,",
+				"          Timezone,",
+				"          ControllerFamily,",
+				"          ControllerTypeDesc,",
+				"          Latitude,",
+				"          Longitude,",
+				"          CreatedDate,",
+				"          LastModifyDate",
+				"     )) ~> SinkTurbinesData"
 			]
 		}
 	}
