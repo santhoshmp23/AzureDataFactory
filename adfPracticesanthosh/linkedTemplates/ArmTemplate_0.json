@@ -875,9 +875,6 @@
 					],
 					"transformations": [],
 					"scriptLines": [
-						"parameters{",
-						"     vTurbineOEM as string (\"Gamesa\")",
-						"}",
 						"source(output(",
 						"          RegionName as string,",
 						"          CountryName as string,",
@@ -911,7 +908,7 @@
 						"     waterMarkColumn: 'LastModifyDate',",
 						"     format: 'query',",
 						"     store: 'sqlserver',",
-						"     query: (\"SELECT TurbineData.RegionName,TurbineData.CountryName,TurbineData.ScadaParkId,TurbineData.ScadaParkSourceId,TurbineData.ScadaParkName, TurbineData.TurbineOEM, TurbineData.OEMTechnicalId AS OEMTechnicalId, TurbineData.TechnicalId, TurbineData.TurbineId,  cast(StationData.StationName as varchar(max)) StationName, TurbineData.TurbinePlatform, TurbineData.TurbineModel,TurbineData.TurbineType, TurbineData.Timezone, TurbineData.ControllerFamily, TurbineData.ControllerTypeDesc, TurbineData.Latitude,TurbineData.Longitude,  NULL as IPAddress,NULL as SoftwareVersion ,  CAST(TurbineData.CreatedDate AS DATE) CreatedDate,CAST(TurbineData.LastModifyDate AS DATE) LastModifyDate FROM [dbo].[TurbineMasterData] TurbineData  LEFT JOIN [StationMaster] StationData ON TurbineData.TurbineId=StationData.IdStation  WHERE TurbineData.TurbineOEM='\"+$vTurbineOEM+\"'\"),",
+						"     query: (\"SELECT TurbineData.RegionName,TurbineData.CountryName,TurbineData.ScadaParkId,TurbineData.ScadaParkSourceId,TurbineData.ScadaParkName, TurbineData.TurbineOEM, TurbineData.OEMTechnicalId AS OEMTechnicalId, TurbineData.TechnicalId, TurbineData.TurbineId,  cast(StationData.StationName as varchar(max)) StationName, TurbineData.TurbinePlatform, TurbineData.TurbineModel,TurbineData.TurbineType, TurbineData.Timezone, TurbineData.ControllerFamily, TurbineData.ControllerTypeDesc, TurbineData.Latitude,TurbineData.Longitude,  NULL as IPAddress,NULL as SoftwareVersion ,  CAST(TurbineData.CreatedDate AS DATE) CreatedDate,CAST(TurbineData.LastModifyDate AS DATE) LastModifyDate FROM [dbo].[TurbineMasterData] TurbineData  LEFT JOIN [StationMaster] StationData ON TurbineData.TurbineId=StationData.IdStation\"),",
 						"     isolationLevel: 'READ_UNCOMMITTED') ~> SrcTurbinesData",
 						"SrcTurbinesData sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
@@ -951,6 +948,7 @@
 						"     deletable: false,",
 						"     upsertable: false,",
 						"     stagingSchemaName: '',",
+						"     saveOrder: 1,",
 						"     errorHandlingOption: 'stopOnFirstError',",
 						"     outputRejectedData: true,",
 						"     outputAssertFailedRows: true,",
@@ -1211,12 +1209,7 @@
 							"dataflow": {
 								"referenceName": "DF_Ingest_Turbines_data",
 								"type": "DataFlowReference",
-								"parameters": {
-									"vTurbineOEM": {
-										"value": "'@{pipeline().globalParameters.pTurbineOEM}'",
-										"type": "Expression"
-									}
-								},
+								"parameters": {},
 								"datasetParameters": {
 									"SrcTurbinesData": {},
 									"SinkTurbinesData": {}
