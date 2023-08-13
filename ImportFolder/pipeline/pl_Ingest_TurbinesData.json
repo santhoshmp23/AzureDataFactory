@@ -17,13 +17,7 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "DF_Ingest_Turbines_data",
-						"type": "DataFlowReference",
-						"parameters": {
-							"vTurbineOEM": {
-								"value": "'@{pipeline().globalParameters.pTurbineOEM}'",
-								"type": "Expression"
-							}
-						}
+						"type": "DataFlowReference"
 					},
 					"compute": {
 						"coreCount": 8,
