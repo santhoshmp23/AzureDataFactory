@@ -48,7 +48,10 @@
 						"referenceName": "DF_Ingest_Turbines_data_Inline",
 						"type": "DataFlowReference",
 						"parameters": {
-							"ppTurbineOEM": "\"Gamesa\""
+							"ppTurbineOEM": {
+								"value": "'@{pipeline().globalParameters.pTurbineOEM}'",
+								"type": "Expression"
+							}
 						}
 					},
 					"compute": {
@@ -62,12 +65,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"pppTurbineOEM": {
-				"type": "string",
-				"defaultValue": "Gamesa"
-			}
-		},
 		"annotations": []
 	}
 }

@@ -28,7 +28,7 @@
 			"transformations": [],
 			"scriptLines": [
 				"parameters{",
-				"     ppTurbineOEM as string (\"Gamesa\")",
+				"     ppTurbineOEM as string",
 				"}",
 				"source(output(",
 				"          RegionName as string,",
