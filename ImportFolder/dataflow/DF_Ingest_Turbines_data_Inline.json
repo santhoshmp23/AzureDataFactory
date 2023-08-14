@@ -12,11 +12,27 @@
 					"name": "SrcTurbinesData"
 				}
 			],
-			"sinks": [],
-			"transformations": [],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "SQLConTSC",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SinkTurbinesData",
+					"rejectedDataLinkedService": {
+						"referenceName": "ls_Pipeline_logs",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [
+				{
+					"name": "alterRow1"
+				}
+			],
 			"scriptLines": [
 				"parameters{",
-				"     DFTurbineOEM as string (\"Gamesa\")",
+				"     DFTurbineOEM as string (\"\")",
 				"}",
 				"source(output(",
 				"          RegionName as string,",
@@ -52,7 +68,51 @@
 				"     format: 'query',",
 				"     store: 'sqlserver',",
 				"     query: (\"SELECT TurbineData.RegionName,TurbineData.CountryName,TurbineData.ScadaParkId,TurbineData.ScadaParkSourceId,  TurbineData.ScadaParkName,  TurbineData.TurbineOEM, TurbineData.OEMTechnicalId AS OEMTechnicalId, TurbineData.TechnicalId, TurbineData.TurbineId, cast(StationData.StationName as varchar(max)) StationName, TurbineData.TurbinePlatform, TurbineData.TurbineModel,TurbineData.TurbineType, TurbineData.Timezone, TurbineData.ControllerFamily, TurbineData.ControllerTypeDesc,  TurbineData.Latitude,TurbineData.Longitude,  NULL as IPAddress,NULL as SoftwareVersion ,  CAST(TurbineData.CreatedDate AS DATE) CreatedDate, CAST(TurbineData.LastModifyDate AS DATE) LastModifyDate,TurbineData.ScadaParkCode as WSOSiteId FROM TurbineMasterData TurbineData  LEFT JOIN StationMaster StationData  ON TurbineData.TurbineId=StationData.IdStation  WHERE TurbineData.TurbineOEM='\"+$DFTurbineOEM+\"'\"),",
-				"     isolationLevel: 'READ_UNCOMMITTED') ~> SrcTurbinesData"
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> SrcTurbinesData",
+				"SrcTurbinesData alterRow(updateIf(TurbineId==TurbineId && LastModifyDate>LastModifyDate),",
+				"     deleteIf(TurbineId==TurbineId && LastModifyDate<LastModifyDate)) ~> alterRow1",
+				"alterRow1 sink(allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ID as long,",
+				"          RegionName as string,",
+				"          CountryName as string,",
+				"          SiteId as integer,",
+				"          SiteSourceId as string,",
+				"          SiteName as string,",
+				"          TurbineOEM as string,",
+				"          OEMTechnicalId as string,",
+				"          TechnicalId as integer,",
+				"          TurbineId as integer,",
+				"          StationName as string,",
+				"          TurbinePlatform as string,",
+				"          TurbineModel as string,",
+				"          TurbineType as string,",
+				"          Timezone as string,",
+				"          ControllerFamily as string,",
+				"          ControllerTypeDesc as string,",
+				"          Latitude as decimal(18,11),",
+				"          Longitude as decimal(18,11),",
+				"          IPAddress as string,",
+				"          SoftwareVersion as string,",
+				"          IsActive as boolean,",
+				"          CreatedDate as timestamp,",
+				"          LastModifyDate as timestamp,",
+				"          WSOSiteId as string",
+				"     ),",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: 'dbo',",
+				"     tableName: 'TurbineData',",
+				"     insertable: true,",
+				"     updateable: true,",
+				"     deletable: true,",
+				"     upsertable: false,",
+				"     keys:['TurbineId'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     outputRejectedData: true) ~> SinkTurbinesData"
 			]
 		}
 	}
