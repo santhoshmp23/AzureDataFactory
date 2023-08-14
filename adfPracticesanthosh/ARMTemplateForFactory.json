@@ -328,7 +328,7 @@
 								"referenceName": "DF_Ingest_Turbines_data_Inline",
 								"type": "DataFlowReference",
 								"parameters": {
-									"ppTurbineOEM": {
+									"DFTurbineOEM": {
 										"value": "'@{pipeline().globalParameters.GTurbineOEM}'",
 										"type": "Expression"
 									}
@@ -336,7 +336,8 @@
 								"datasetParameters": {
 									"SrcTurbinesData": {},
 									"SinkTurbinesData": {}
-								}
+								},
+								"linkedServiceParameters": {}
 							},
 							"staging": {},
 							"compute": {
@@ -345,7 +346,7 @@
 							},
 							"traceLevel": "Fine",
 							"continuationSettings": {
-								"customizedCheckpointKey": "7d7f769b-253f-4318-b3b9-3ecaadab5b4a"
+								"customizedCheckpointKey": "568d3987-d735-4213-99ed-1468ddfd9fcc"
 							}
 						}
 					}
@@ -1871,10 +1872,14 @@
 							}
 						}
 					],
-					"transformations": [],
+					"transformations": [
+						{
+							"name": "alterRow1"
+						}
+					],
 					"scriptLines": [
 						"parameters{",
-						"     ppTurbineOEM as string",
+						"     DFTurbineOEM as string (\"\")",
 						"}",
 						"source(output(",
 						"          RegionName as string,",
@@ -1901,7 +1906,7 @@
 						"          LastModifyDate as date,",
 						"          WSOSiteId as string",
 						"     ),",
-						"     allowSchemaDrift: false,",
+						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     enableCdc: true,",
 						"     mode: 'read',",
@@ -1909,9 +1914,11 @@
 						"     waterMarkColumn: 'LastModifyDate',",
 						"     format: 'query',",
 						"     store: 'sqlserver',",
-						"     query: (\"SELECT TurbineData.RegionName,TurbineData.CountryName,TurbineData.ScadaParkId,TurbineData.ScadaParkSourceId,  TurbineData.ScadaParkName,  TurbineData.TurbineOEM, TurbineData.OEMTechnicalId AS OEMTechnicalId, TurbineData.TechnicalId, TurbineData.TurbineId, cast(StationData.StationName as varchar(max)) StationName, TurbineData.TurbinePlatform, TurbineData.TurbineModel,TurbineData.TurbineType, TurbineData.Timezone, TurbineData.ControllerFamily, TurbineData.ControllerTypeDesc,  TurbineData.Latitude,TurbineData.Longitude,  NULL as IPAddress,NULL as SoftwareVersion ,  CAST(TurbineData.CreatedDate AS DATE) CreatedDate, CAST(TurbineData.LastModifyDate AS DATE) LastModifyDate,TurbineData.ScadaParkCode as WSOSiteId FROM TurbineMasterData TurbineData  LEFT JOIN StationMaster StationData  ON TurbineData.TurbineId=StationData.IdStation  WHERE TurbineData.TurbineOEM='\"+$ppTurbineOEM+\"'\"),",
+						"     query: (\"SELECT TurbineData.RegionName,TurbineData.CountryName,TurbineData.ScadaParkId,TurbineData.ScadaParkSourceId,  TurbineData.ScadaParkName,  TurbineData.TurbineOEM, TurbineData.OEMTechnicalId AS OEMTechnicalId, TurbineData.TechnicalId, TurbineData.TurbineId, cast(StationData.StationName as varchar(max)) StationName, TurbineData.TurbinePlatform, TurbineData.TurbineModel,TurbineData.TurbineType, TurbineData.Timezone, TurbineData.ControllerFamily, TurbineData.ControllerTypeDesc,  TurbineData.Latitude,TurbineData.Longitude,  NULL as IPAddress,NULL as SoftwareVersion ,  CAST(TurbineData.CreatedDate AS DATE) CreatedDate, CAST(TurbineData.LastModifyDate AS DATE) LastModifyDate,TurbineData.ScadaParkCode as WSOSiteId FROM TurbineMasterData TurbineData  LEFT JOIN StationMaster StationData  ON TurbineData.TurbineId=StationData.IdStation  WHERE TurbineData.TurbineOEM='\"+$DFTurbineOEM+\"'\"),",
 						"     isolationLevel: 'READ_UNCOMMITTED') ~> SrcTurbinesData",
-						"SrcTurbinesData sink(allowSchemaDrift: false,",
+						"SrcTurbinesData alterRow(updateIf(TurbineId==TurbineId && LastModifyDate>LastModifyDate),",
+						"     deleteIf(TurbineId==TurbineId && LastModifyDate<LastModifyDate)) ~> alterRow1",
+						"alterRow1 sink(allowSchemaDrift: false,",
 						"     validateSchema: false,",
 						"     input(",
 						"          ID as long,",
@@ -1945,41 +1952,14 @@
 						"     schemaName: 'dbo',",
 						"     tableName: 'TurbineData',",
 						"     insertable: true,",
-						"     updateable: false,",
-						"     deletable: false,",
+						"     updateable: true,",
+						"     deletable: true,",
 						"     upsertable: false,",
-						"     truncate: true,",
-						"     stagingSchemaName: 'dbo',",
-						"     errorHandlingOption: 'allErrors',",
-						"     outputRejectedData: true,",
-						"     rejectedData_container: 'pipelinelog',",
-						"     transactionCommit: 'batch',",
-						"     reportSuccessOnError: false,",
-						"     outputAssertFailedRows: true,",
-						"     assertFailure_container: 'pipelinelog',",
-						"     mapColumn(",
-						"          RegionName,",
-						"          CountryName,",
-						"          SiteId = ScadaParkId,",
-						"          SiteSourceId = ScadaParkSourceId,",
-						"          SiteName = ScadaParkName,",
-						"          TurbineOEM,",
-						"          OEMTechnicalId,",
-						"          TechnicalId,",
-						"          TurbineId,",
-						"          StationName,",
-						"          TurbinePlatform,",
-						"          TurbineModel,",
-						"          TurbineType,",
-						"          Timezone,",
-						"          ControllerFamily,",
-						"          ControllerTypeDesc,",
-						"          Latitude,",
-						"          Longitude,",
-						"          CreatedDate,",
-						"          LastModifyDate,",
-						"          WSOSiteId",
-						"     )) ~> SinkTurbinesData"
+						"     keys:['TurbineId'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     outputRejectedData: true) ~> SinkTurbinesData"
 					]
 				}
 			},
