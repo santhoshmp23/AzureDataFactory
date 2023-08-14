@@ -26,9 +26,6 @@
 					"traceLevel": "None",
 					"cacheSinks": {
 						"firstRowOnly": true
-					},
-					"continuationSettings": {
-						"customizedCheckpointKey": "a9c03edd-886e-42bb-a95a-8ced89f8d296"
 					}
 				}
 			}
