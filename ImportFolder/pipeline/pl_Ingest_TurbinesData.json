@@ -5,6 +5,8 @@
 			{
 				"name": "DF_TurbinesData",
 				"type": "ExecuteDataFlow",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -26,6 +28,33 @@
 					"traceLevel": "None",
 					"cacheSinks": {
 						"firstRowOnly": true
+					}
+				}
+			},
+			{
+				"name": "DF_TurbinesData_inline",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF_Ingest_Turbines_data_Inline",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine",
+					"continuationSettings": {
+						"customizedCheckpointKey": "fe461fdf-72af-4eb7-b8a5-7f24289ab882"
 					}
 				}
 			}
