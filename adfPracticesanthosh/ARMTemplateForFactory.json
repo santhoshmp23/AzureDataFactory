@@ -363,12 +363,13 @@
 								"referenceName": "DF_Ingest_Turbines_data_Inline",
 								"type": "DataFlowReference",
 								"parameters": {
-									"ppTurbineOEM": "\"fGamesa\""
+									"ppTurbineOEM": "\"Gamesa\""
 								},
 								"datasetParameters": {
 									"SrcTurbinesData": {},
 									"SinkTurbinesData": {}
-								}
+								},
+								"linkedServiceParameters": {}
 							},
 							"staging": {},
 							"compute": {
