@@ -1,0 +1,271 @@
+{
+	"name": "AzureSqlTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlDbCon",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "TscPrac"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ScadaParkName",
+				"type": "varchar"
+			},
+			{
+				"name": "ScadaParkCode",
+				"type": "varchar"
+			},
+			{
+				"name": "ScadaParkId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ScadaParkSourceId",
+				"type": "varchar"
+			},
+			{
+				"name": "TurbineName",
+				"type": "varchar"
+			},
+			{
+				"name": "TurbineId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "TechnicalId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DeviceId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "OEMTechnicalId",
+				"type": "varchar"
+			},
+			{
+				"name": "EquipmentNumber",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "TurbineOEM",
+				"type": "varchar"
+			},
+			{
+				"name": "TurbineFunctionalLocation",
+				"type": "varchar"
+			},
+			{
+				"name": "S4HANATurbineFunctionalLocation",
+				"type": "varchar"
+			},
+			{
+				"name": "S4HANALegacyTurbineFunctionalLocation",
+				"type": "varchar"
+			},
+			{
+				"name": "TurbineModel",
+				"type": "varchar"
+			},
+			{
+				"name": "TurbinePlatform",
+				"type": "varchar"
+			},
+			{
+				"name": "LocationTypeName",
+				"type": "varchar"
+			},
+			{
+				"name": "ProjectParkname",
+				"type": "varchar"
+			},
+			{
+				"name": "ProjectParkCode",
+				"type": "varchar"
+			},
+			{
+				"name": "ProjectParkId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ParkFunctionalLocation",
+				"type": "varchar"
+			},
+			{
+				"name": "S4HANAParkFunctionalLocation",
+				"type": "varchar"
+			},
+			{
+				"name": "S4HANALegacyParkFunctionalLocation",
+				"type": "varchar"
+			},
+			{
+				"name": "OwnerName",
+				"type": "varchar"
+			},
+			{
+				"name": "Timezone",
+				"type": "varchar"
+			},
+			{
+				"name": "MicrosoftTimezone",
+				"type": "varchar"
+			},
+			{
+				"name": "TimezoneOffsetMinutes",
+				"type": "decimal",
+				"precision": 4,
+				"scale": 0
+			},
+			{
+				"name": "TimezoneOffsetHour",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 6
+			},
+			{
+				"name": "ControllerTypeDesc",
+				"type": "varchar"
+			},
+			{
+				"name": "NominalPower",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 6
+			},
+			{
+				"name": "HubHeight",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 6
+			},
+			{
+				"name": "ControllerFamily",
+				"type": "varchar"
+			},
+			{
+				"name": "TurbineType",
+				"type": "varchar"
+			},
+			{
+				"name": "RotorDiameter",
+				"type": "varchar"
+			},
+			{
+				"name": "Latitude",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 11
+			},
+			{
+				"name": "Longitude",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 11
+			},
+			{
+				"name": "Altitude",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ParkEntryLongitude",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 11
+			},
+			{
+				"name": "ParkEntryLatitude",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 11
+			},
+			{
+				"name": "ProvinceName",
+				"type": "varchar"
+			},
+			{
+				"name": "CountryName",
+				"type": "varchar"
+			},
+			{
+				"name": "Code",
+				"type": "varchar"
+			},
+			{
+				"name": "RegionName",
+				"type": "varchar"
+			},
+			{
+				"name": "RegionShortName",
+				"type": "varchar"
+			},
+			{
+				"name": "StatusTypeDesc",
+				"type": "varchar"
+			},
+			{
+				"name": "CreatedBy",
+				"type": "varchar"
+			},
+			{
+				"name": "CreatedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "LastModifyBy",
+				"type": "varchar"
+			},
+			{
+				"name": "LastModifyDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "TurbineStartUpDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "WarrantyStartDate",
+				"type": "date"
+			},
+			{
+				"name": "WarrantyEndDate",
+				"type": "date"
+			},
+			{
+				"name": "WindClass",
+				"type": "varchar"
+			},
+			{
+				"name": "FTPName",
+				"type": "varchar"
+			},
+			{
+				"name": "AverageDensity",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "TurbineMasterData"
+		}
+	}
+}
