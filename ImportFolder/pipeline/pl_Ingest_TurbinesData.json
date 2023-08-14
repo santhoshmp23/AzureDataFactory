@@ -17,13 +17,7 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "DF_Ingest_Turbines_data_Inline",
-						"type": "DataFlowReference",
-						"parameters": {
-							"ppTurbineOEM": {
-								"value": "'@{pipeline().globalParameters.GTurbineOEM}'",
-								"type": "Expression"
-							}
-						}
+						"type": "DataFlowReference"
 					},
 					"compute": {
 						"coreCount": 8,
@@ -31,7 +25,7 @@
 					},
 					"traceLevel": "Fine",
 					"continuationSettings": {
-						"customizedCheckpointKey": "7d7f769b-253f-4318-b3b9-3ecaadab5b4a"
+						"customizedCheckpointKey": "568d3987-d735-4213-99ed-1468ddfd9fcc"
 					}
 				}
 			}
