@@ -39,7 +39,7 @@
 			"type": "string",
 			"defaultValue": "zomato.csv"
 		},
-		"default_properties_pTurbineOEM_value": {
+		"default_properties_GTurbineOEM_value": {
 			"type": "string",
 			"defaultValue": "Gamesa"
 		},
@@ -69,9 +69,9 @@
 					"type": "string",
 					"value": "[parameters('default_properties_pRawFileName_value')]"
 				},
-				"pTurbineOEM": {
+				"GTurbineOEM": {
 					"type": "string",
-					"value": "[parameters('default_properties_pTurbineOEM_value')]"
+					"value": "[parameters('default_properties_GTurbineOEM_value')]"
 				}
 			},
 			"dependsOn": []

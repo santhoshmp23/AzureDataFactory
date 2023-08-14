@@ -32,7 +32,7 @@
 		"default_properties_pRawFileName_value": {
 			"value": "zomato.csv"
 		},
-		"default_properties_pTurbineOEM_value": {
+		"default_properties_GTurbineOEM_value": {
 			"value": "Gamesa"
 		},
 		"containerUri": {

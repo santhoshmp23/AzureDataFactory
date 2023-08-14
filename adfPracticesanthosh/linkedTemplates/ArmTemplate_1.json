@@ -71,14 +71,15 @@
 								"type": "DataFlowReference",
 								"parameters": {
 									"ppTurbineOEM": {
-										"value": "'@{pipeline().globalParameters.pTurbineOEM}'",
+										"value": "'@{pipeline().globalParameters.GTurbineOEM}'",
 										"type": "Expression"
 									}
 								},
 								"datasetParameters": {
 									"SrcTurbinesData": {},
 									"SinkTurbinesData": {}
-								}
+								},
+								"linkedServiceParameters": {}
 							},
 							"staging": {},
 							"compute": {
