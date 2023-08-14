@@ -13,16 +13,15 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/pl_Ingest_TurbinesData')]",
+			"name": "[concat(parameters('factoryName'), '/Ingest_Teams')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "DF_TurbinesData",
+						"name": "DF_MasterData",
+						"description": "This will ingest Teams, City and Venue",
 						"type": "ExecuteDataFlow",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -34,12 +33,16 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "DF_Ingest_Turbines_data",
+								"referenceName": "DF_Ingest_Master_Data",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"SrcTurbinesData": {},
-									"sink1": {}
+									"SrcMatches": {
+										"pDataLakeName": "https://saadfpractivedl.dfs.core.windows.net/"
+									},
+									"DestDistinctTeamNames": {},
+									"DestDistinctCity": {},
+									"DestDistinctVenue": {}
 								}
 							},
 							"staging": {},
@@ -47,49 +50,7 @@
 								"coreCount": 8,
 								"computeType": "General"
 							},
-							"traceLevel": "None",
-							"cacheSinks": {
-								"firstRowOnly": true
-							}
-						}
-					},
-					{
-						"name": "DF_TurbinesData_inline",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_Ingest_Turbines_data_Inline",
-								"type": "DataFlowReference",
-								"parameters": {
-									"ppTurbineOEM": {
-										"value": "'@{pipeline().globalParameters.GTurbineOEM}'",
-										"type": "Expression"
-									}
-								},
-								"datasetParameters": {
-									"SrcTurbinesData": {},
-									"SinkTurbinesData": {}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine",
-							"continuationSettings": {
-								"customizedCheckpointKey": "7d7f769b-253f-4318-b3b9-3ecaadab5b4a"
-							}
+							"traceLevel": "Fine"
 						}
 					}
 				],
