@@ -21,6 +21,8 @@
 					{
 						"name": "DF_TurbinesData",
 						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -50,6 +52,41 @@
 								"firstRowOnly": true
 							}
 						}
+					},
+					{
+						"name": "DF_TurbinesData_inline",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_Ingest_Turbines_data_Inline",
+								"type": "DataFlowReference",
+								"parameters": {
+									"ppTurbineOEM": "\"fGamesa\""
+								},
+								"datasetParameters": {
+									"SrcTurbinesData": {},
+									"SinkTurbinesData": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine",
+							"continuationSettings": {
+								"customizedCheckpointKey": "7d7f769b-253f-4318-b3b9-3ecaadab5b4a"
+							}
+						}
 					}
 				],
 				"policy": {
@@ -57,7 +94,7 @@
 					"cancelAfter": {}
 				},
 				"parameters": {
-					"pTurbineOEM": {
+					"pppTurbineOEM": {
 						"type": "string",
 						"defaultValue": "Gamesa"
 					}
