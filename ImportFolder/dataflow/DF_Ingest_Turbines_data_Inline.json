@@ -27,6 +27,9 @@
 			],
 			"transformations": [],
 			"scriptLines": [
+				"parameters{",
+				"     ppTurbineOEM as string (\"Gamesa\")",
+				"}",
 				"source(output(",
 				"          RegionName as string,",
 				"          CountryName as string,",
@@ -60,7 +63,7 @@
 				"     waterMarkColumn: 'LastModifyDate',",
 				"     format: 'query',",
 				"     store: 'sqlserver',",
-				"     query: 'SELECT TurbineData.RegionName,TurbineData.CountryName,TurbineData.ScadaParkId,TurbineData.ScadaParkSourceId,  TurbineData.ScadaParkName,  TurbineData.TurbineOEM, TurbineData.OEMTechnicalId AS OEMTechnicalId, TurbineData.TechnicalId, TurbineData.TurbineId, cast(StationData.StationName as varchar(max)) StationName, TurbineData.TurbinePlatform, TurbineData.TurbineModel,TurbineData.TurbineType, TurbineData.Timezone, TurbineData.ControllerFamily, TurbineData.ControllerTypeDesc,  TurbineData.Latitude,TurbineData.Longitude,  NULL as IPAddress,NULL as SoftwareVersion ,  CAST(TurbineData.CreatedDate AS DATE) CreatedDate, CAST(TurbineData.LastModifyDate AS DATE) LastModifyDate,TurbineData.ScadaParkCode as WSOSiteId FROM TurbineMasterData TurbineData  LEFT JOIN StationMaster StationData  ON TurbineData.TurbineId=StationData.IdStation  WHERE TurbineData.TurbineOEM=\\'Gamesa\\'',",
+				"     query: (\"SELECT TurbineData.RegionName,TurbineData.CountryName,TurbineData.ScadaParkId,TurbineData.ScadaParkSourceId,  TurbineData.ScadaParkName,  TurbineData.TurbineOEM, TurbineData.OEMTechnicalId AS OEMTechnicalId, TurbineData.TechnicalId, TurbineData.TurbineId, cast(StationData.StationName as varchar(max)) StationName, TurbineData.TurbinePlatform, TurbineData.TurbineModel,TurbineData.TurbineType, TurbineData.Timezone, TurbineData.ControllerFamily, TurbineData.ControllerTypeDesc,  TurbineData.Latitude,TurbineData.Longitude,  NULL as IPAddress,NULL as SoftwareVersion ,  CAST(TurbineData.CreatedDate AS DATE) CreatedDate, CAST(TurbineData.LastModifyDate AS DATE) LastModifyDate,TurbineData.ScadaParkCode as WSOSiteId FROM TurbineMasterData TurbineData  LEFT JOIN StationMaster StationData  ON TurbineData.TurbineId=StationData.IdStation  WHERE TurbineData.TurbineOEM='\"+$ppTurbineOEM+\"'\"),",
 				"     isolationLevel: 'READ_UNCOMMITTED') ~> SrcTurbinesData",
 				"SrcTurbinesData sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",

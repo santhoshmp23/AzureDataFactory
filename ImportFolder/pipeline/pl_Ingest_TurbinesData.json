@@ -46,7 +46,10 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "DF_Ingest_Turbines_data_Inline",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"ppTurbineOEM": "\"fGamesa\""
+						}
 					},
 					"compute": {
 						"coreCount": 8,
@@ -54,13 +57,13 @@
 					},
 					"traceLevel": "Fine",
 					"continuationSettings": {
-						"customizedCheckpointKey": "fe461fdf-72af-4eb7-b8a5-7f24289ab882"
+						"customizedCheckpointKey": "7d7f769b-253f-4318-b3b9-3ecaadab5b4a"
 					}
 				}
 			}
 		],
 		"parameters": {
-			"pTurbineOEM": {
+			"pppTurbineOEM": {
 				"type": "string",
 				"defaultValue": "Gamesa"
 			}
