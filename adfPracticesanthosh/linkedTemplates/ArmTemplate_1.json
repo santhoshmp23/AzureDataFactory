@@ -70,13 +70,15 @@
 								"referenceName": "DF_Ingest_Turbines_data_Inline",
 								"type": "DataFlowReference",
 								"parameters": {
-									"ppTurbineOEM": "\"Gamesa\""
+									"ppTurbineOEM": {
+										"value": "'@{pipeline().globalParameters.pTurbineOEM}'",
+										"type": "Expression"
+									}
 								},
 								"datasetParameters": {
 									"SrcTurbinesData": {},
 									"SinkTurbinesData": {}
-								},
-								"linkedServiceParameters": {}
+								}
 							},
 							"staging": {},
 							"compute": {
@@ -93,12 +95,6 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
-				},
-				"parameters": {
-					"pppTurbineOEM": {
-						"type": "string",
-						"defaultValue": "Gamesa"
-					}
 				},
 				"annotations": []
 			},
