@@ -314,8 +314,6 @@
 					{
 						"name": "DF_TurbinesData",
 						"type": "ExecuteDataFlow",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -348,50 +346,22 @@
 								"customizedCheckpointKey": "a9c03edd-886e-42bb-a95a-8ced89f8d296"
 							}
 						}
-					},
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_Ingest_Turbines_data_copy1",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"SrcTurbinesData": {},
-									"SinkTurbinesData": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine",
-							"continuationSettings": {
-								"customizedCheckpointKey": "64e9b606-06fa-4c86-99be-ac622e500c03"
-							}
-						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"parameters": {
+					"pTurbineOEM": {
+						"type": "string",
+						"defaultValue": "Gamesa"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_Ingest_Turbines_data')]",
-				"[concat(variables('factoryId'), '/dataflows/DF_Ingest_Turbines_data_copy1')]"
+				"[concat(variables('factoryId'), '/dataflows/DF_Ingest_Turbines_data')]"
 			]
 		},
 		{
@@ -1397,7 +1367,6 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     limit: 100,",
 						"     enableCdc: true,",
 						"     mode: 'read',",
 						"     skipInitialLoad: false,",
