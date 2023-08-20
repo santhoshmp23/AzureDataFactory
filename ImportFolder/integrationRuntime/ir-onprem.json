@@ -1,0 +1,7 @@
+{
+	"name": "ir-onprem",
+	"properties": {
+		"type": "SelfHosted",
+		"description": "This IR is used to connect to data store on premises."
+	}
+}
