@@ -15,6 +15,12 @@
 			},
 			"dsDestServerName": {
 				"type": "string"
+			},
+			"dsSrcDatabaseName": {
+				"type": "string"
+			},
+			"dsDestDatabaseName": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
