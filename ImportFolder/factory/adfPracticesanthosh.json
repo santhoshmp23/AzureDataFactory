@@ -17,6 +17,10 @@
 			"GTurbineOEM": {
 				"type": "string",
 				"value": "Gamesa"
+			},
+			"gPDatabaseServerName": {
+				"type": "string",
+				"value": "."
 			}
 		}
 	},
