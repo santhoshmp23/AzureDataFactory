@@ -21,6 +21,10 @@
 			"gPDatabaseServerName": {
 				"type": "string",
 				"value": "."
+			},
+			"gPDatabaseName": {
+				"type": "string",
+				"value": "."
 			}
 		}
 	},
