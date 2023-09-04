@@ -5,6 +5,14 @@
 			"referenceName": "AzureSQLServer",
 			"type": "LinkedServiceReference",
 			"parameters": {
+				"pLsServerName": {
+					"value": "@dataset().dsSrcServerName",
+					"type": "Expression"
+				},
+				"pLsDatabaseName": {
+					"value": "@dataset().dsSrcDatabaseName",
+					"type": "Expression"
+				},
 				"pLsUserName": "SrvAdmin",
 				"pLSPassword": "Admin@123"
 			}
