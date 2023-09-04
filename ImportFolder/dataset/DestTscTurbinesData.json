@@ -1,0 +1,131 @@
+{
+	"name": "DestTscTurbinesData",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSQLServer",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"pLsUserName": "SrvAdmin",
+				"pLSPassword": "Admin@123"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "RegionName",
+				"type": "varchar"
+			},
+			{
+				"name": "CountryName",
+				"type": "varchar"
+			},
+			{
+				"name": "SiteId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SiteSourceId",
+				"type": "varchar"
+			},
+			{
+				"name": "SiteName",
+				"type": "varchar"
+			},
+			{
+				"name": "TurbineOEM",
+				"type": "varchar"
+			},
+			{
+				"name": "OEMTechnicalId",
+				"type": "varchar"
+			},
+			{
+				"name": "TechnicalId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "TurbineId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "StationName",
+				"type": "varchar"
+			},
+			{
+				"name": "TurbinePlatform",
+				"type": "varchar"
+			},
+			{
+				"name": "TurbineModel",
+				"type": "varchar"
+			},
+			{
+				"name": "TurbineType",
+				"type": "varchar"
+			},
+			{
+				"name": "Timezone",
+				"type": "varchar"
+			},
+			{
+				"name": "ControllerFamily",
+				"type": "varchar"
+			},
+			{
+				"name": "ControllerTypeDesc",
+				"type": "varchar"
+			},
+			{
+				"name": "Latitude",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 11
+			},
+			{
+				"name": "Longitude",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 11
+			},
+			{
+				"name": "IPAddress",
+				"type": "varchar"
+			},
+			{
+				"name": "SoftwareVersion",
+				"type": "varchar"
+			},
+			{
+				"name": "IsActive",
+				"type": "bit"
+			},
+			{
+				"name": "CreatedDate",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "LastModifyDate",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "WSOSiteId",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "TurbineData"
+		}
+	}
+}
