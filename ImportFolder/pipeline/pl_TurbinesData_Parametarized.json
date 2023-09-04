@@ -1,0 +1,14 @@
+{
+	"name": "pl_TurbinesData_Parametarized",
+	"properties": {
+		"activities": [
+			{
+				"name": "Append variable1",
+				"type": "AppendVariable",
+				"dependsOn": [],
+				"userProperties": []
+			}
+		],
+		"annotations": []
+	}
+}
