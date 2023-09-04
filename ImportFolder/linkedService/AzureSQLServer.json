@@ -1,0 +1,27 @@
+{
+	"name": "AzureSQLServer",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"parameters": {
+			"pLsServerName": {
+				"type": "string"
+			},
+			"pLsDatabaseName": {
+				"type": "string"
+			},
+			"pLsUserName": {
+				"type": "String",
+				"defaultValue": "SrvAdmin"
+			},
+			"pLSPassword": {
+				"type": "String",
+				"defaultValue": "Admin@123"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Data Source=@{linkedService().pLsServerName};Initial Catalog=@{linkedService().pLsDatabaseName};User ID=@{linkedService().pLsUserName};Password=@{linkedService().pLSPassword}"
+		}
+	}
+}
