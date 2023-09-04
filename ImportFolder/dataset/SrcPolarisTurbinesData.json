@@ -9,6 +9,14 @@
 				"pLSPassword": "Admin@123"
 			}
 		},
+		"parameters": {
+			"dsSrcServerName": {
+				"type": "string"
+			},
+			"dsDestServerName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [],
