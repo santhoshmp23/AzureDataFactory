@@ -23,6 +23,20 @@
 								"dsSrcServerName": {
 									"value": "@pipeline().parameters.plSrcServerName",
 									"type": "Expression"
+								},
+								"dsSrcDatabaseName": {
+									"value": "@pipeline().parameters.plSrcDatabaseName",
+									"type": "Expression"
+								}
+							},
+							"SinkTurbinesDataTsc": {
+								"dsDestServerName": {
+									"value": "@pipeline().parameters.plDestServerName",
+									"type": "Expression"
+								},
+								"dsDestDatabaseName": {
+									"value": "@pipeline().parameters.plDestDatabaseName",
+									"type": "Expression"
 								}
 							}
 						}
@@ -31,7 +45,10 @@
 						"coreCount": 8,
 						"computeType": "General"
 					},
-					"traceLevel": "Fine"
+					"traceLevel": "None",
+					"cacheSinks": {
+						"firstRowOnly": true
+					}
 				}
 			}
 		],
