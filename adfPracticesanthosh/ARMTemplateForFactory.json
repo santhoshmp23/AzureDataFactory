@@ -27,6 +27,11 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_RawFile_DL'"
 		},
+		"AzureSQLServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSQLServer'",
+			"defaultValue": "Integrated Security=False;Data Source=@{linkedService().pLsServerName};Initial Catalog=@{linkedService().pLsDatabaseName};User ID=@{linkedService().pLsUserName};Password=@{linkedService().pLSPassword}"
+		},
 		"ls_RawFile_DL_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://saadfpractivedl.dfs.core.windows.net/"
@@ -46,6 +51,14 @@
 		"default_properties_GTurbineOEM_value": {
 			"type": "string",
 			"defaultValue": "Gamesa"
+		},
+		"default_properties_gPDatabaseServerName_value": {
+			"type": "string",
+			"defaultValue": "."
+		},
+		"default_properties_gPDatabaseName_value": {
+			"type": "string",
+			"defaultValue": "."
 		}
 	},
 	"variables": {
@@ -336,8 +349,7 @@
 								"datasetParameters": {
 									"SrcTurbinesData": {},
 									"SinkTurbinesData": {}
-								},
-								"linkedServiceParameters": {}
+								}
 							},
 							"staging": {},
 							"compute": {
@@ -1538,6 +1550,17 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ir-onprem')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"description": "This IR is used to connect to data store on premises.",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DF_Ingest_Master_Data')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1916,8 +1939,8 @@
 						"     store: 'sqlserver',",
 						"     query: (\"SELECT TurbineData.RegionName,TurbineData.CountryName,TurbineData.ScadaParkId,TurbineData.ScadaParkSourceId,  TurbineData.ScadaParkName,  TurbineData.TurbineOEM, TurbineData.OEMTechnicalId AS OEMTechnicalId, TurbineData.TechnicalId, TurbineData.TurbineId, cast(StationData.StationName as varchar(max)) StationName, TurbineData.TurbinePlatform, TurbineData.TurbineModel,TurbineData.TurbineType, TurbineData.Timezone, TurbineData.ControllerFamily, TurbineData.ControllerTypeDesc,  TurbineData.Latitude,TurbineData.Longitude,  NULL as IPAddress,NULL as SoftwareVersion ,  CAST(TurbineData.CreatedDate AS DATE) CreatedDate, CAST(TurbineData.LastModifyDate AS DATE) LastModifyDate,TurbineData.ScadaParkCode as WSOSiteId FROM TurbineMasterData TurbineData  LEFT JOIN StationMaster StationData  ON TurbineData.TurbineId=StationData.IdStation  WHERE TurbineData.TurbineOEM='\"+$DFTurbineOEM+\"'\"),",
 						"     isolationLevel: 'READ_UNCOMMITTED') ~> SrcTurbinesData",
-						"SrcTurbinesData alterRow(updateIf(TurbineId==TurbineId && LastModifyDate>LastModifyDate),",
-						"     deleteIf(TurbineId==TurbineId && LastModifyDate<LastModifyDate)) ~> alterRow1",
+						"SrcTurbinesData alterRow(updateIf(TurbineId==TurbineId&&LastModifyDate>LastModifyDate),",
+						"     deleteIf(TurbineId==TurbineId&&LastModifyDate<LastModifyDate)) ~> alterRow1",
 						"alterRow1 sink(allowSchemaDrift: false,",
 						"     validateSchema: false,",
 						"     input(",
@@ -1970,6 +1993,695 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSQLServer')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"pLsServerName": {
+						"type": "string"
+					},
+					"pLsDatabaseName": {
+						"type": "string"
+					},
+					"pLsUserName": {
+						"type": "String",
+						"defaultValue": "SrvAdmin"
+					},
+					"pLSPassword": {
+						"type": "String",
+						"defaultValue": "Admin@123"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSQLServer_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_TurbinesData_Parametarized')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF_Load_Tdata_Parameter",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_TurbinesData_Parameteraized",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"SrcPolarisTurbinesDataData": {
+										"dsSrcServerName": {
+											"value": "@pipeline().parameters.plSrcServerName",
+											"type": "Expression"
+										},
+										"dsSrcDatabaseName": {
+											"value": "@pipeline().parameters.plSrcDatabaseName",
+											"type": "Expression"
+										}
+									},
+									"SinkTurbinesDataTsc": {
+										"dsDestServerName": {
+											"value": "@pipeline().parameters.plDestServerName",
+											"type": "Expression"
+										},
+										"dsDestDatabaseName": {
+											"value": "@pipeline().parameters.plDestDatabaseName",
+											"type": "Expression"
+										}
+									}
+								},
+								"linkedServiceParameters": {}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "None",
+							"cacheSinks": {
+								"firstRowOnly": true
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"plSrcDatabaseName": {
+						"type": "string"
+					},
+					"plSrcServerName": {
+						"type": "string"
+					},
+					"plDestServerName": {
+						"type": "string"
+					},
+					"plDestDatabaseName": {
+						"type": "string"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_TurbinesData_Parameteraized')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SrcPolarisTurbinesData')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSQLServer",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"pLsServerName": {
+							"value": "@dataset().dsSrcServerName",
+							"type": "Expression"
+						},
+						"pLsDatabaseName": {
+							"value": "@dataset().dsSrcDatabaseName",
+							"type": "Expression"
+						},
+						"pLsUserName": "SrvAdmin",
+						"pLSPassword": "Admin@123"
+					}
+				},
+				"parameters": {
+					"dsSrcServerName": {
+						"type": "string"
+					},
+					"dsSrcDatabaseName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "ScadaParkName",
+						"type": "varchar"
+					},
+					{
+						"name": "ScadaParkCode",
+						"type": "varchar"
+					},
+					{
+						"name": "ScadaParkId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ScadaParkSourceId",
+						"type": "varchar"
+					},
+					{
+						"name": "TurbineName",
+						"type": "varchar"
+					},
+					{
+						"name": "TurbineId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "TechnicalId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DeviceId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "OEMTechnicalId",
+						"type": "varchar"
+					},
+					{
+						"name": "EquipmentNumber",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "TurbineOEM",
+						"type": "varchar"
+					},
+					{
+						"name": "TurbineFunctionalLocation",
+						"type": "varchar"
+					},
+					{
+						"name": "S4HANATurbineFunctionalLocation",
+						"type": "varchar"
+					},
+					{
+						"name": "S4HANALegacyTurbineFunctionalLocation",
+						"type": "varchar"
+					},
+					{
+						"name": "TurbineModel",
+						"type": "varchar"
+					},
+					{
+						"name": "TurbinePlatform",
+						"type": "varchar"
+					},
+					{
+						"name": "LocationTypeName",
+						"type": "varchar"
+					},
+					{
+						"name": "ProjectParkname",
+						"type": "varchar"
+					},
+					{
+						"name": "ProjectParkCode",
+						"type": "varchar"
+					},
+					{
+						"name": "ProjectParkId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ParkFunctionalLocation",
+						"type": "varchar"
+					},
+					{
+						"name": "S4HANAParkFunctionalLocation",
+						"type": "varchar"
+					},
+					{
+						"name": "S4HANALegacyParkFunctionalLocation",
+						"type": "varchar"
+					},
+					{
+						"name": "OwnerName",
+						"type": "varchar"
+					},
+					{
+						"name": "Timezone",
+						"type": "varchar"
+					},
+					{
+						"name": "MicrosoftTimezone",
+						"type": "varchar"
+					},
+					{
+						"name": "TimezoneOffsetMinutes",
+						"type": "decimal",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "TimezoneOffsetHour",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 6
+					},
+					{
+						"name": "ControllerTypeDesc",
+						"type": "varchar"
+					},
+					{
+						"name": "NominalPower",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 6
+					},
+					{
+						"name": "HubHeight",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 6
+					},
+					{
+						"name": "ControllerFamily",
+						"type": "varchar"
+					},
+					{
+						"name": "TurbineType",
+						"type": "varchar"
+					},
+					{
+						"name": "RotorDiameter",
+						"type": "varchar"
+					},
+					{
+						"name": "Latitude",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 11
+					},
+					{
+						"name": "Longitude",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 11
+					},
+					{
+						"name": "Altitude",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ParkEntryLongitude",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 11
+					},
+					{
+						"name": "ParkEntryLatitude",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 11
+					},
+					{
+						"name": "ProvinceName",
+						"type": "varchar"
+					},
+					{
+						"name": "CountryName",
+						"type": "varchar"
+					},
+					{
+						"name": "Code",
+						"type": "varchar"
+					},
+					{
+						"name": "RegionName",
+						"type": "varchar"
+					},
+					{
+						"name": "RegionShortName",
+						"type": "varchar"
+					},
+					{
+						"name": "StatusTypeDesc",
+						"type": "varchar"
+					},
+					{
+						"name": "CreatedBy",
+						"type": "varchar"
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "LastModifyBy",
+						"type": "varchar"
+					},
+					{
+						"name": "LastModifyDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "TurbineStartUpDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "WarrantyStartDate",
+						"type": "date"
+					},
+					{
+						"name": "WarrantyEndDate",
+						"type": "date"
+					},
+					{
+						"name": "WindClass",
+						"type": "varchar"
+					},
+					{
+						"name": "FTPName",
+						"type": "varchar"
+					},
+					{
+						"name": "AverageDensity",
+						"type": "decimal",
+						"precision": 6,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "TurbineMasterData"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSQLServer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestTscTurbinesData')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSQLServer",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"pLsServerName": {
+							"value": "@dataset().dsDestServerName",
+							"type": "Expression"
+						},
+						"pLsDatabaseName": {
+							"value": "@dataset().dsDestDatabaseName",
+							"type": "Expression"
+						},
+						"pLsUserName": "SrvAdmin",
+						"pLSPassword": "Admin@123"
+					}
+				},
+				"parameters": {
+					"dsDestServerName": {
+						"type": "string"
+					},
+					"dsDestDatabaseName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "ID",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "RegionName",
+						"type": "varchar"
+					},
+					{
+						"name": "CountryName",
+						"type": "varchar"
+					},
+					{
+						"name": "SiteId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SiteSourceId",
+						"type": "varchar"
+					},
+					{
+						"name": "SiteName",
+						"type": "varchar"
+					},
+					{
+						"name": "TurbineOEM",
+						"type": "varchar"
+					},
+					{
+						"name": "OEMTechnicalId",
+						"type": "varchar"
+					},
+					{
+						"name": "TechnicalId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "TurbineId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "StationName",
+						"type": "varchar"
+					},
+					{
+						"name": "TurbinePlatform",
+						"type": "varchar"
+					},
+					{
+						"name": "TurbineModel",
+						"type": "varchar"
+					},
+					{
+						"name": "TurbineType",
+						"type": "varchar"
+					},
+					{
+						"name": "Timezone",
+						"type": "varchar"
+					},
+					{
+						"name": "ControllerFamily",
+						"type": "varchar"
+					},
+					{
+						"name": "ControllerTypeDesc",
+						"type": "varchar"
+					},
+					{
+						"name": "Latitude",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 11
+					},
+					{
+						"name": "Longitude",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 11
+					},
+					{
+						"name": "IPAddress",
+						"type": "varchar"
+					},
+					{
+						"name": "SoftwareVersion",
+						"type": "varchar"
+					},
+					{
+						"name": "IsActive",
+						"type": "bit"
+					},
+					{
+						"name": "CreatedDate",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "LastModifyDate",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "WSOSiteId",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "TurbineData"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSQLServer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_TurbinesData_Parameteraized')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SrcPolarisTurbinesData",
+								"type": "DatasetReference"
+							},
+							"name": "SrcPolarisTurbinesDataData"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DestTscTurbinesData",
+								"type": "DatasetReference"
+							},
+							"name": "SinkTurbinesDataTsc"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          ScadaParkName as string,",
+						"          ScadaParkCode as string,",
+						"          ScadaParkId as integer,",
+						"          ScadaParkSourceId as string,",
+						"          TurbineName as string,",
+						"          TurbineId as integer,",
+						"          TechnicalId as integer,",
+						"          DeviceId as integer,",
+						"          OEMTechnicalId as string,",
+						"          EquipmentNumber as long,",
+						"          TurbineOEM as string,",
+						"          TurbineFunctionalLocation as string,",
+						"          S4HANATurbineFunctionalLocation as string,",
+						"          S4HANALegacyTurbineFunctionalLocation as string,",
+						"          TurbineModel as string,",
+						"          TurbinePlatform as string,",
+						"          LocationTypeName as string,",
+						"          ProjectParkname as string,",
+						"          ProjectParkCode as string,",
+						"          ProjectParkId as integer,",
+						"          ParkFunctionalLocation as string,",
+						"          S4HANAParkFunctionalLocation as string,",
+						"          S4HANALegacyParkFunctionalLocation as string,",
+						"          OwnerName as string,",
+						"          Timezone as string,",
+						"          MicrosoftTimezone as string,",
+						"          TimezoneOffsetMinutes as decimal(4,0),",
+						"          TimezoneOffsetHour as decimal(10,6),",
+						"          ControllerTypeDesc as string,",
+						"          NominalPower as decimal(18,6),",
+						"          HubHeight as decimal(18,6),",
+						"          ControllerFamily as string,",
+						"          TurbineType as string,",
+						"          RotorDiameter as string,",
+						"          Latitude as decimal(18,11),",
+						"          Longitude as decimal(18,11),",
+						"          Altitude as integer,",
+						"          ParkEntryLongitude as decimal(18,11),",
+						"          ParkEntryLatitude as decimal(18,11),",
+						"          ProvinceName as string,",
+						"          CountryName as string,",
+						"          Code as string,",
+						"          RegionName as string,",
+						"          RegionShortName as string,",
+						"          StatusTypeDesc as string,",
+						"          CreatedBy as string,",
+						"          CreatedDate as timestamp,",
+						"          LastModifyBy as string,",
+						"          LastModifyDate as timestamp,",
+						"          TurbineStartUpDate as timestamp,",
+						"          WarrantyStartDate as date,",
+						"          WarrantyEndDate as date,",
+						"          WindClass as string,",
+						"          FTPName as string,",
+						"          AverageDensity as decimal(6,3)",
+						"     ),",
+						"     allowSchemaDrift: false,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_COMMITTED',",
+						"     format: 'table') ~> SrcPolarisTurbinesDataData",
+						"SrcPolarisTurbinesDataData sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          ID as long,",
+						"          RegionName as string,",
+						"          CountryName as string,",
+						"          SiteId as integer,",
+						"          SiteSourceId as string,",
+						"          SiteName as string,",
+						"          TurbineOEM as string,",
+						"          OEMTechnicalId as string,",
+						"          TechnicalId as integer,",
+						"          TurbineId as integer,",
+						"          StationName as string,",
+						"          TurbinePlatform as string,",
+						"          TurbineModel as string,",
+						"          TurbineType as string,",
+						"          Timezone as string,",
+						"          ControllerFamily as string,",
+						"          ControllerTypeDesc as string,",
+						"          Latitude as decimal(18,11),",
+						"          Longitude as decimal(18,11),",
+						"          IPAddress as string,",
+						"          SoftwareVersion as string,",
+						"          IsActive as boolean,",
+						"          CreatedDate as timestamp,",
+						"          LastModifyDate as timestamp,",
+						"          WSOSiteId as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SinkTurbinesDataTsc"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SrcPolarisTurbinesData')]",
+				"[concat(variables('factoryId'), '/datasets/DestTscTurbinesData')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/default')]",
 			"type": "Microsoft.DataFactory/factories/globalparameters",
 			"apiVersion": "2018-06-01",
@@ -1989,6 +2701,14 @@
 				"GTurbineOEM": {
 					"type": "string",
 					"value": "[parameters('default_properties_GTurbineOEM_value')]"
+				},
+				"gPDatabaseServerName": {
+					"type": "string",
+					"value": "[parameters('default_properties_gPDatabaseServerName_value')]"
+				},
+				"gPDatabaseName": {
+					"type": "string",
+					"value": "[parameters('default_properties_gPDatabaseName_value')]"
 				}
 			},
 			"dependsOn": []

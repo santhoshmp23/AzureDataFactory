@@ -13,6 +13,685 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/ZomataDataProcessing')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "cp_RawData_Zomato",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 2,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"additionalColumns": [
+									{
+										"name": "CreatedBy",
+										"value": "Santhosh"
+									}
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": false,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"enableSkipIncompatibleRow": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "id",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "restaurant name",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "RestaurantName",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "restaurant type",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "RestaurantType",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "rate",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "AverageRating",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "numofratings",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "NumberofRating",
+											"type": "Int64",
+											"physicalType": "bigint"
+										}
+									},
+									{
+										"source": {
+											"name": "avgcost",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "AverageCost",
+											"type": "Decimal",
+											"physicalType": "decimal",
+											"scale": 0,
+											"precision": 18
+										}
+									},
+									{
+										"source": {
+											"name": "online_order",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "OnlineBooking",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "cuisines type",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Cusine",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "area",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Area",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									},
+									{
+										"source": {
+											"name": "local address",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "LocalAddress",
+											"type": "String",
+											"physicalType": "varchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "srcZomatoSourceRawData",
+								"type": "DatasetReference",
+								"parameters": {
+									"pLocDirectoryName": "raw-files",
+									"pLocFIleName": {
+										"value": "@pipeline().globalParameters.pRawFileName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sinkZomatoRawData",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [
+					"plZomato"
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_Ingest_TurbinesData')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF_TurbinesData_inline",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_Ingest_Turbines_data_Inline",
+								"type": "DataFlowReference",
+								"parameters": {
+									"DFTurbineOEM": {
+										"value": "'@{pipeline().globalParameters.GTurbineOEM}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"SrcTurbinesData": {},
+									"SinkTurbinesData": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine",
+							"continuationSettings": {
+								"customizedCheckpointKey": "568d3987-d735-4213-99ed-1468ddfd9fcc"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_Ingest_Master_Data')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_src_matches",
+								"type": "DatasetReference"
+							},
+							"name": "SrcMatches"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Sink_Teams",
+								"type": "DatasetReference"
+							},
+							"name": "DestDistinctTeamNames"
+						},
+						{
+							"linkedService": {
+								"referenceName": "SqlServerAzure",
+								"type": "LinkedServiceReference"
+							},
+							"name": "DestDistinctCity"
+						},
+						{
+							"linkedService": {
+								"referenceName": "SqlServerAzure",
+								"type": "LinkedServiceReference"
+							},
+							"name": "DestDistinctVenue"
+						}
+					],
+					"transformations": [
+						{
+							"name": "SelectOnlyTeam1"
+						},
+						{
+							"name": "SelectOnlyTeam2"
+						},
+						{
+							"name": "UnionTwoTeams"
+						},
+						{
+							"name": "DistinctTeams"
+						},
+						{
+							"name": "SelectOnlyCity"
+						},
+						{
+							"name": "DistinctCity"
+						},
+						{
+							"name": "SelectOnlyVenue"
+						},
+						{
+							"name": "DistinctVenue"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          id as integer,",
+						"          season as short,",
+						"          city as string,",
+						"          date as date,",
+						"          team1 as string,",
+						"          team2 as string,",
+						"          toss_winner as string,",
+						"          toss_decision as string,",
+						"          result as string,",
+						"          dl_applied as boolean,",
+						"          winner as string,",
+						"          win_by_runs as short,",
+						"          win_by_wickets as short,",
+						"          player_of_match as string,",
+						"          venue as string,",
+						"          umpire1 as string,",
+						"          umpire2 as string,",
+						"          umpire3 as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> SrcMatches",
+						"SrcMatches select(mapColumn(",
+						"          team1",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SelectOnlyTeam1",
+						"SrcMatches select(mapColumn(",
+						"          team2",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SelectOnlyTeam2",
+						"SelectOnlyTeam1, SelectOnlyTeam2 union(byName: true)~> UnionTwoTeams",
+						"UnionTwoTeams aggregate(groupBy(team1),",
+						"     TeamCount = count(team1)) ~> DistinctTeams",
+						"SrcMatches select(mapColumn(",
+						"          MatchCity = city",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SelectOnlyCity",
+						"SelectOnlyCity aggregate(groupBy(MatchCity),",
+						"     MatchCityCount = count(MatchCity)) ~> DistinctCity",
+						"SrcMatches select(mapColumn(",
+						"          StadiumName = venue",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SelectOnlyVenue",
+						"SelectOnlyVenue aggregate(groupBy(StadiumName = substringIndex(StadiumName,',',1)),",
+						"     StadiumNameCount = count(StadiumName)) ~> DistinctVenue",
+						"DistinctTeams sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Id as integer,",
+						"          TeamName as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     postSQLs:['Delete from tblTeams where teamName is null or teamName=\\'\\''],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          TeamName = team1",
+						"     )) ~> DestDistinctTeamNames",
+						"DistinctCity sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'tblCity',",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     deletable: false,",
+						"     upsertable: false,",
+						"     truncate: true,",
+						"     postSQLs:['DELETE FROM tblCity WHERE CityName is NULL or CityName=\\'\\''],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          CityName = MatchCity",
+						"     )) ~> DestDistinctCity",
+						"DistinctVenue sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table',",
+						"     store: 'sqlserver',",
+						"     schemaName: 'dbo',",
+						"     tableName: 'tblVenues',",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     deletable: false,",
+						"     upsertable: false,",
+						"     truncate: true,",
+						"     postSQLs:['Delete from tblVenues where venueName is null or venueName=\\'\\''],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     saveOrder: 1,",
+						"     mapColumn(",
+						"          VenueName = StadiumName",
+						"     )) ~> DestDistinctVenue"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_Ingest_Turbines_data')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "SqlDbCon",
+								"type": "LinkedServiceReference"
+							},
+							"name": "SrcTurbinesData"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable2",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          RegionName as string,",
+						"          CountryName as string,",
+						"          ScadaParkId as integer,",
+						"          ScadaParkSourceId as string,",
+						"          ScadaParkName as string,",
+						"          TurbineOEM as string,",
+						"          OEMTechnicalId as string,",
+						"          TechnicalId as integer,",
+						"          TurbineId as integer,",
+						"          StationName as string,",
+						"          TurbinePlatform as string,",
+						"          TurbineModel as string,",
+						"          TurbineType as string,",
+						"          Timezone as string,",
+						"          ControllerFamily as string,",
+						"          ControllerTypeDesc as string,",
+						"          Latitude as decimal(18,11),",
+						"          Longitude as decimal(18,11),",
+						"          IPAddress as integer,",
+						"          SoftwareVersion as integer,",
+						"          CreatedDate as date,",
+						"          LastModifyDate as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     waterMarkColumn: 'LastModifyDate',",
+						"     format: 'query',",
+						"     store: 'sqlserver',",
+						"     query: (\"SELECT TurbineData.RegionName,TurbineData.CountryName,TurbineData.ScadaParkId,TurbineData.ScadaParkSourceId,TurbineData.ScadaParkName, TurbineData.TurbineOEM, TurbineData.OEMTechnicalId AS OEMTechnicalId, TurbineData.TechnicalId, TurbineData.TurbineId,  cast(StationData.StationName as varchar(max)) StationName, TurbineData.TurbinePlatform, TurbineData.TurbineModel,TurbineData.TurbineType, TurbineData.Timezone, TurbineData.ControllerFamily, TurbineData.ControllerTypeDesc, TurbineData.Latitude,TurbineData.Longitude,  NULL as IPAddress,NULL as SoftwareVersion ,  CAST(TurbineData.CreatedDate AS DATE) CreatedDate,CAST(TurbineData.LastModifyDate AS DATE) LastModifyDate FROM [dbo].[TurbineMasterData] TurbineData  LEFT JOIN [StationMaster] StationData ON TurbineData.TurbineId=StationData.IdStation\"),",
+						"     isolationLevel: 'NONE',",
+						"     mode: 'read') ~> SrcTurbinesData",
+						"SrcTurbinesData sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          ID as long,",
+						"          RegionName as string,",
+						"          CountryName as string,",
+						"          SiteId as integer,",
+						"          SiteSourceId as string,",
+						"          SiteName as string,",
+						"          TurbineOEM as string,",
+						"          OEMTechnicalId as string,",
+						"          TechnicalId as integer,",
+						"          TurbineId as integer,",
+						"          StationName as string,",
+						"          TurbinePlatform as string,",
+						"          TurbineModel as string,",
+						"          TurbineType as string,",
+						"          Timezone as string,",
+						"          ControllerFamily as string,",
+						"          ControllerTypeDesc as string,",
+						"          Latitude as decimal(18,11),",
+						"          Longitude as decimal(18,11),",
+						"          IPAddress as string,",
+						"          SoftwareVersion as string,",
+						"          IsActive as boolean,",
+						"          CreatedDate as timestamp,",
+						"          LastModifyDate as timestamp,",
+						"          WSOSiteId as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          RegionName,",
+						"          CountryName,",
+						"          SiteId = ScadaParkId,",
+						"          SiteSourceId = ScadaParkSourceId,",
+						"          SiteName = ScadaParkName,",
+						"          TurbineOEM,",
+						"          OEMTechnicalId,",
+						"          TechnicalId,",
+						"          TurbineId,",
+						"          StationName,",
+						"          TurbinePlatform,",
+						"          TurbineModel,",
+						"          TurbineType,",
+						"          Timezone,",
+						"          ControllerFamily,",
+						"          ControllerTypeDesc,",
+						"          Latitude,",
+						"          Longitude,",
+						"          IPAddress,",
+						"          SoftwareVersion,",
+						"          CreatedDate,",
+						"          LastModifyDate",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_TurbinesData_Parameteraized')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SrcPolarisTurbinesData",
+								"type": "DatasetReference"
+							},
+							"name": "SrcPolarisTurbinesDataData"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DestTscTurbinesData",
+								"type": "DatasetReference"
+							},
+							"name": "SinkTurbinesDataTsc"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          ScadaParkName as string,",
+						"          ScadaParkCode as string,",
+						"          ScadaParkId as integer,",
+						"          ScadaParkSourceId as string,",
+						"          TurbineName as string,",
+						"          TurbineId as integer,",
+						"          TechnicalId as integer,",
+						"          DeviceId as integer,",
+						"          OEMTechnicalId as string,",
+						"          EquipmentNumber as long,",
+						"          TurbineOEM as string,",
+						"          TurbineFunctionalLocation as string,",
+						"          S4HANATurbineFunctionalLocation as string,",
+						"          S4HANALegacyTurbineFunctionalLocation as string,",
+						"          TurbineModel as string,",
+						"          TurbinePlatform as string,",
+						"          LocationTypeName as string,",
+						"          ProjectParkname as string,",
+						"          ProjectParkCode as string,",
+						"          ProjectParkId as integer,",
+						"          ParkFunctionalLocation as string,",
+						"          S4HANAParkFunctionalLocation as string,",
+						"          S4HANALegacyParkFunctionalLocation as string,",
+						"          OwnerName as string,",
+						"          Timezone as string,",
+						"          MicrosoftTimezone as string,",
+						"          TimezoneOffsetMinutes as decimal(4,0),",
+						"          TimezoneOffsetHour as decimal(10,6),",
+						"          ControllerTypeDesc as string,",
+						"          NominalPower as decimal(18,6),",
+						"          HubHeight as decimal(18,6),",
+						"          ControllerFamily as string,",
+						"          TurbineType as string,",
+						"          RotorDiameter as string,",
+						"          Latitude as decimal(18,11),",
+						"          Longitude as decimal(18,11),",
+						"          Altitude as integer,",
+						"          ParkEntryLongitude as decimal(18,11),",
+						"          ParkEntryLatitude as decimal(18,11),",
+						"          ProvinceName as string,",
+						"          CountryName as string,",
+						"          Code as string,",
+						"          RegionName as string,",
+						"          RegionShortName as string,",
+						"          StatusTypeDesc as string,",
+						"          CreatedBy as string,",
+						"          CreatedDate as timestamp,",
+						"          LastModifyBy as string,",
+						"          LastModifyDate as timestamp,",
+						"          TurbineStartUpDate as timestamp,",
+						"          WarrantyStartDate as date,",
+						"          WarrantyEndDate as date,",
+						"          WindClass as string,",
+						"          FTPName as string,",
+						"          AverageDensity as decimal(6,3)",
+						"     ),",
+						"     allowSchemaDrift: false,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_COMMITTED',",
+						"     format: 'table') ~> SrcPolarisTurbinesDataData",
+						"SrcPolarisTurbinesDataData sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          ID as long,",
+						"          RegionName as string,",
+						"          CountryName as string,",
+						"          SiteId as integer,",
+						"          SiteSourceId as string,",
+						"          SiteName as string,",
+						"          TurbineOEM as string,",
+						"          OEMTechnicalId as string,",
+						"          TechnicalId as integer,",
+						"          TurbineId as integer,",
+						"          StationName as string,",
+						"          TurbinePlatform as string,",
+						"          TurbineModel as string,",
+						"          TurbineType as string,",
+						"          Timezone as string,",
+						"          ControllerFamily as string,",
+						"          ControllerTypeDesc as string,",
+						"          Latitude as decimal(18,11),",
+						"          Longitude as decimal(18,11),",
+						"          IPAddress as string,",
+						"          SoftwareVersion as string,",
+						"          IsActive as boolean,",
+						"          CreatedDate as timestamp,",
+						"          LastModifyDate as timestamp,",
+						"          WSOSiteId as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SinkTurbinesDataTsc"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Ingest_Teams')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -60,7 +739,92 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_Ingest_Master_Data')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_TurbinesData_Parametarized')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "DF_Load_Tdata_Parameter",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_TurbinesData_Parameteraized",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"SrcPolarisTurbinesDataData": {
+										"dsSrcServerName": {
+											"value": "@pipeline().parameters.plSrcServerName",
+											"type": "Expression"
+										},
+										"dsSrcDatabaseName": {
+											"value": "@pipeline().parameters.plSrcDatabaseName",
+											"type": "Expression"
+										}
+									},
+									"SinkTurbinesDataTsc": {
+										"dsDestServerName": {
+											"value": "@pipeline().parameters.plDestServerName",
+											"type": "Expression"
+										},
+										"dsDestDatabaseName": {
+											"value": "@pipeline().parameters.plDestDatabaseName",
+											"type": "Expression"
+										}
+									}
+								},
+								"linkedServiceParameters": {}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "None",
+							"cacheSinks": {
+								"firstRowOnly": true
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"plSrcDatabaseName": {
+						"type": "string"
+					},
+					"plSrcServerName": {
+						"type": "string"
+					},
+					"plDestServerName": {
+						"type": "string"
+					},
+					"plDestDatabaseName": {
+						"type": "string"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_TurbinesData_Parameteraized')]"
+			]
 		}
 	]
 }

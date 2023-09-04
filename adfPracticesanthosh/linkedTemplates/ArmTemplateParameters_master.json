@@ -20,6 +20,9 @@
 		"ls_RawFile_DL_accountKey": {
 			"value": ""
 		},
+		"AzureSQLServer_connectionString": {
+			"value": "Integrated Security=False;Data Source=@{linkedService().pLsServerName};Initial Catalog=@{linkedService().pLsDatabaseName};User ID=@{linkedService().pLsUserName};Password=@{linkedService().pLSPassword}"
+		},
 		"ls_RawFile_DL_properties_typeProperties_url": {
 			"value": "https://saadfpractivedl.dfs.core.windows.net/"
 		},
@@ -34,6 +37,12 @@
 		},
 		"default_properties_GTurbineOEM_value": {
 			"value": "Gamesa"
+		},
+		"default_properties_gPDatabaseServerName_value": {
+			"value": "."
+		},
+		"default_properties_gPDatabaseName_value": {
+			"value": "."
 		},
 		"containerUri": {
 			"value": ""
