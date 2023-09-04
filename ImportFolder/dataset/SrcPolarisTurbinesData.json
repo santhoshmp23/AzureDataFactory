@@ -1,0 +1,20 @@
+{
+	"name": "SrcPolarisTurbinesData",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSQLServer",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"pLsUserName": "SrvAdmin",
+				"pLSPassword": "Admin@123"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "TurbineMasterData"
+		}
+	}
+}
