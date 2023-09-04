@@ -5,8 +5,24 @@
 			"referenceName": "AzureSQLServer",
 			"type": "LinkedServiceReference",
 			"parameters": {
+				"pLsServerName": {
+					"value": "@dataset().DestServerName",
+					"type": "Expression"
+				},
+				"pLsDatabaseName": {
+					"value": "@dataset().DestDatabaseName",
+					"type": "Expression"
+				},
 				"pLsUserName": "SrvAdmin",
 				"pLSPassword": "Admin@123"
+			}
+		},
+		"parameters": {
+			"DestServerName": {
+				"type": "string"
+			},
+			"DestDatabaseName": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
