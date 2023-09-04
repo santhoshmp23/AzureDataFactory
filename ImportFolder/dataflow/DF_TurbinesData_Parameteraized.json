@@ -12,7 +12,15 @@
 					"name": "SrcPolarisTurbinesDataData"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DestTscTurbinesData",
+						"type": "DatasetReference"
+					},
+					"name": "SinkTurbinesDataTsc"
+				}
+			],
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
@@ -76,7 +84,43 @@
 				"     validateSchema: false,",
 				"     inferDriftedColumnTypes: true,",
 				"     isolationLevel: 'READ_COMMITTED',",
-				"     format: 'table') ~> SrcPolarisTurbinesDataData"
+				"     format: 'table') ~> SrcPolarisTurbinesDataData",
+				"SrcPolarisTurbinesDataData sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ID as long,",
+				"          RegionName as string,",
+				"          CountryName as string,",
+				"          SiteId as integer,",
+				"          SiteSourceId as string,",
+				"          SiteName as string,",
+				"          TurbineOEM as string,",
+				"          OEMTechnicalId as string,",
+				"          TechnicalId as integer,",
+				"          TurbineId as integer,",
+				"          StationName as string,",
+				"          TurbinePlatform as string,",
+				"          TurbineModel as string,",
+				"          TurbineType as string,",
+				"          Timezone as string,",
+				"          ControllerFamily as string,",
+				"          ControllerTypeDesc as string,",
+				"          Latitude as decimal(18,11),",
+				"          Longitude as decimal(18,11),",
+				"          IPAddress as string,",
+				"          SoftwareVersion as string,",
+				"          IsActive as boolean,",
+				"          CreatedDate as timestamp,",
+				"          LastModifyDate as timestamp,",
+				"          WSOSiteId as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SinkTurbinesDataTsc"
 			]
 		}
 	}
