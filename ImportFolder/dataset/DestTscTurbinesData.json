@@ -6,11 +6,11 @@
 			"type": "LinkedServiceReference",
 			"parameters": {
 				"pLsServerName": {
-					"value": "@dataset().DestServerName",
+					"value": "@dataset().dsDestServerName",
 					"type": "Expression"
 				},
 				"pLsDatabaseName": {
-					"value": "@dataset().DestDatabaseName",
+					"value": "@dataset().dsDestDatabaseName",
 					"type": "Expression"
 				},
 				"pLsUserName": "SrvAdmin",
@@ -18,10 +18,10 @@
 			}
 		},
 		"parameters": {
-			"DestServerName": {
+			"dsDestServerName": {
 				"type": "string"
 			},
-			"DestDatabaseName": {
+			"dsDestDatabaseName": {
 				"type": "string"
 			}
 		},
