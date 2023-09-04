@@ -1,0 +1,19 @@
+{
+	"name": "DF_TurbinesData_Parameteraized",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"name": "SrcPolarisTurbinesDataData"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> SrcPolarisTurbinesDataData"
+			]
+		}
+	}
+}
