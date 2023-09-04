@@ -17,7 +17,15 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "DF_TurbinesData_Parameteraized",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"SrcPolarisTurbinesDataData": {
+								"dsSrcServerName": {
+									"value": "@pipeline().parameters.plSrcServerName",
+									"type": "Expression"
+								}
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
@@ -29,6 +37,15 @@
 		],
 		"parameters": {
 			"plSrcDatabaseName": {
+				"type": "string"
+			},
+			"plSrcServerName": {
+				"type": "string"
+			},
+			"plDestServerName": {
+				"type": "string"
+			},
+			"plDestDatabaseName": {
 				"type": "string"
 			}
 		},
