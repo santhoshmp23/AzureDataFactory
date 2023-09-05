@@ -10,6 +10,9 @@
 						"type": "DatasetReference"
 					},
 					"name": "SrcPolarisTurbinesDataData"
+				},
+				{
+					"name": "source1"
 				}
 			],
 			"sinks": [
@@ -88,6 +91,8 @@
 				"     limit: 100,",
 				"     isolationLevel: 'READ_COMMITTED',",
 				"     format: 'table') ~> SrcPolarisTurbinesDataData",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false) ~> source1",
 				"SrcPolarisTurbinesDataData sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     input(",
