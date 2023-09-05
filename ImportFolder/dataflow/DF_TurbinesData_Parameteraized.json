@@ -13,7 +13,7 @@
 				},
 				{
 					"linkedService": {
-						"referenceName": "AzureSQLServer",
+						"referenceName": "SqlServerAzure",
 						"type": "LinkedServiceReference"
 					},
 					"name": "source1"
