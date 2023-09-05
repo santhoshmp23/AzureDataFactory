@@ -12,6 +12,10 @@
 					"name": "SrcPolarisTurbinesDataData"
 				},
 				{
+					"linkedService": {
+						"referenceName": "AzureSQLServer",
+						"type": "LinkedServiceReference"
+					},
 					"name": "source1"
 				}
 			],
@@ -92,7 +96,12 @@
 				"     isolationLevel: 'READ_COMMITTED',",
 				"     format: 'table') ~> SrcPolarisTurbinesDataData",
 				"source(allowSchemaDrift: true,",
-				"     validateSchema: false) ~> source1",
+				"     validateSchema: false,",
+				"     format: 'table',",
+				"     store: 'sqlserver',",
+				"     schemaName: '',",
+				"     tableName: '',",
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> source1",
 				"SrcPolarisTurbinesDataData sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     input(",
