@@ -584,7 +584,7 @@
 								"referenceName": "AzureSqlTable1",
 								"type": "DatasetReference"
 							},
-							"name": "SinkTurbinesDataTsc"
+							"name": "sink1"
 						}
 					],
 					"transformations": [],
@@ -654,7 +654,7 @@
 						"     limit: 100,",
 						"     isolationLevel: 'READ_COMMITTED',",
 						"     format: 'table') ~> SrcPolarisTurbinesDataData",
-						"SrcPolarisTurbinesDataData sink(allowSchemaDrift: false,",
+						"SrcPolarisTurbinesDataData sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
 						"          ScadaParkName as string,",
@@ -777,7 +777,7 @@
 						"          WindClass,",
 						"          FTPName,",
 						"          AverageDensity",
-						"     )) ~> SinkTurbinesDataTsc"
+						"     )) ~> sink1"
 					]
 				}
 			},
@@ -857,7 +857,12 @@
 							"dataflow": {
 								"referenceName": "DF_TurbinesData_Parameteraized",
 								"type": "DataFlowReference",
-								"parameters": {},
+								"parameters": {
+									"DF_TurbineOEM": {
+										"value": "'@{variables('vTurbineOEM')}'",
+										"type": "Expression"
+									}
+								},
 								"datasetParameters": {
 									"SrcPolarisTurbinesDataData": {
 										"dsSrcServerName": {
@@ -867,9 +872,13 @@
 										"dsSrcDatabaseName": {
 											"value": "@pipeline().parameters.plSrcDatabaseName",
 											"type": "Expression"
+										},
+										"dsSrcTurbineOEM": {
+											"value": "@variables('vTurbineOEM')",
+											"type": "Expression"
 										}
 									},
-									"SinkTurbinesDataTsc": {}
+									"sink1": {}
 								}
 							},
 							"staging": {},
