@@ -119,7 +119,10 @@
 				"     upsertable:false,",
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> SinkTurbinesDataTsc"
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          SiteName = ScadaParkName",
+				"     )) ~> SinkTurbinesDataTsc"
 			]
 		}
 	}
