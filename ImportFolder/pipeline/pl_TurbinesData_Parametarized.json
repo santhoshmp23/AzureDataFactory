@@ -64,6 +64,10 @@
 			},
 			"plDestDatabaseName": {
 				"type": "string"
+			},
+			"plTurbineOEM": {
+				"type": "string",
+				"defaultValue": "Gamesa"
 			}
 		},
 		"annotations": []
