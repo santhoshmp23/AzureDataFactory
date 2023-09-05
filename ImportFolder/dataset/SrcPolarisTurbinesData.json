@@ -23,6 +23,10 @@
 			},
 			"dsSrcDatabaseName": {
 				"type": "string"
+			},
+			"dsSrcTurbineOEM": {
+				"type": "string",
+				"defaultValue": "Gamesa"
 			}
 		},
 		"annotations": [],
