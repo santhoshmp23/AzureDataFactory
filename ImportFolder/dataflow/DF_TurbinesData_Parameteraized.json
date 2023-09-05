@@ -24,7 +24,7 @@
 			"transformations": [],
 			"scriptLines": [
 				"parameters{",
-				"     parameter1 as string",
+				"     DF_TurbineOEM as string (\"Gamesa\")",
 				"}",
 				"source(output(",
 				"          ScadaParkName as string,",
