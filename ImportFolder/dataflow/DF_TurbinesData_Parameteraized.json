@@ -129,8 +129,6 @@
 				"          SiteId = ScadaParkId,",
 				"          SiteSourceId = ScadaParkSourceId,",
 				"          SiteName = ScadaParkName,",
-				"          each(match($DF_TurbineOEM),",
-				"               ERROR_FUNCTION('') = $$),",
 				"          OEMTechnicalId,",
 				"          TechnicalId,",
 				"          TurbineId,",
@@ -143,7 +141,8 @@
 				"          Latitude,",
 				"          Longitude,",
 				"          CreatedDate,",
-				"          LastModifyDate",
+				"          LastModifyDate,",
+				"          TurbineOEM = ScadaParkName",
 				"     )) ~> SinkTurbinesDataTsc"
 			]
 		}
