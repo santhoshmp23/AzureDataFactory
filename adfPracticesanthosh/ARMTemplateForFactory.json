@@ -446,7 +446,8 @@
 				},
 				"variables": {
 					"vTurbineOEM": {
-						"type": "String"
+						"type": "String",
+						"defaultValue": "Gamesa"
 					}
 				},
 				"annotations": []
