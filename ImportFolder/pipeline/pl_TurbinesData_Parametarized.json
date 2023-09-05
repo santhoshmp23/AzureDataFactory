@@ -18,6 +18,12 @@
 					"dataflow": {
 						"referenceName": "DF_TurbinesData_Parameteraized",
 						"type": "DataFlowReference",
+						"parameters": {
+							"DF_TurbineOEM": {
+								"value": "'@{variables('vTurbineOEM')}'",
+								"type": "Expression"
+							}
+						},
 						"datasetParameters": {
 							"SrcPolarisTurbinesDataData": {
 								"dsSrcServerName": {
@@ -26,6 +32,10 @@
 								},
 								"dsSrcDatabaseName": {
 									"value": "@pipeline().parameters.plSrcDatabaseName",
+									"type": "Expression"
+								},
+								"dsSrcTurbineOEM": {
+									"value": "@variables('vTurbineOEM')",
 									"type": "Expression"
 								}
 							}
