@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "adfPracticesanthosh"
 		},
+		"AzureSQLServer_connectionString": {
+			"value": "Integrated Security=False;Data Source=@{linkedService().pLsServerName};Initial Catalog=@{linkedService().pLsDatabaseName};User ID=@{linkedService().pLsUserName};Password=@{linkedService().pLSPassword}"
+		},
 		"SQLConTSC_connectionString": {
 			"value": ""
 		},
@@ -19,9 +22,6 @@
 		},
 		"ls_RawFile_DL_accountKey": {
 			"value": ""
-		},
-		"AzureSQLServer_connectionString": {
-			"value": "Integrated Security=False;Data Source=@{linkedService().pLsServerName};Initial Catalog=@{linkedService().pLsDatabaseName};User ID=@{linkedService().pLsUserName};Password=@{linkedService().pLSPassword}"
 		},
 		"ls_RawFile_DL_properties_typeProperties_url": {
 			"value": "https://saadfpractivedl.dfs.core.windows.net/"
