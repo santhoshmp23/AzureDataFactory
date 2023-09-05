@@ -60,6 +60,12 @@
 				"defaultValue": "Gamesa"
 			}
 		},
+		"variables": {
+			"vTurbineOEM": {
+				"type": "String",
+				"defaultValue": "Gamesa"
+			}
+		},
 		"annotations": []
 	}
 }
